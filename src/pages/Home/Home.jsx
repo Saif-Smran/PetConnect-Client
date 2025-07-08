@@ -2,6 +2,7 @@ import React from 'react';
 import Hero from './Hero';
 import Category from './Category';
 import CallToAction from './CallToAction';
+import AboutUs from './AboutUs';
 
 
 const Home = () => {
@@ -12,6 +13,7 @@ const Home = () => {
             <Hero></Hero>
             <Category></Category>
             <CallToAction></CallToAction>
+            <AboutUs></AboutUs>
         </div>
     );
 };
