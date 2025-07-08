@@ -125,7 +125,7 @@ const Category = () => {
                       <span className="text-sm font-medium text-base-content/70">Available</span>
                     </div>
                     <Link
-                      to={`/pets/${pet._id}`}
+                      to={`/pet/${pet._id}`}
                       className="btn btn-primary btn-sm gap-2 shadow-lg hover:shadow-xl transition-all duration-300"
                     >
                       See Details

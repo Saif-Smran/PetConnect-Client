@@ -6,19 +6,19 @@ import { HiSparkles, HiArrowRight } from 'react-icons/hi';
 const HowItWorks = () => {
   const steps = [
     {
-      icon: <MdSearch className="w-12 h-12 text-primary" />,
+      icon: <MdSearch className="w-12 h-12 text-white" />,
       title: 'Browse Pets',
       description: 'Explore our extensive listings of adorable pets from verified shelters, each with detailed profiles and stories.',
       color: 'from-primary to-primary/70'
     },
     {
-      icon: <MdConnectWithoutContact className="w-12 h-12 text-secondary" />,
+      icon: <MdConnectWithoutContact className="w-12 h-12 text-white" />,
       title: 'Meet & Match',
       description: 'Connect directly with shelters or foster homes through our secure platform to meet your potential new family member.',
       color: 'from-secondary to-secondary/70'
     },
     {
-      icon: <MdHome className="w-12 h-12 text-accent" />,
+      icon: <MdHome className="w-12 h-12 text-white" />,
       title: 'Bring Them Home',
       description: 'Complete the adoption process with confidence and welcome your new companion into your loving family!',
       color: 'from-accent to-accent/70'
@@ -53,7 +53,7 @@ const HowItWorks = () => {
               className="group relative backdrop-blur-lg bg-base-100/30 border border-base-content/10 rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 overflow-hidden"
             >
               {/* Step number */}
-              <div className={`absolute -top-4 -right-4 w-12 h-12 bg-gradient-to-r ${step.color} rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
+              <div className={`absolute -top-1 -left-1 w-12 h-12 bg-gradient-to-r ${step.color} rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg`}>
                 {idx + 1}
               </div>
 

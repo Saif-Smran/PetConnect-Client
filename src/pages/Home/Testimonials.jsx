@@ -102,7 +102,7 @@ const Testimonials = () => {
         </div>
 
         {/* Bottom CTA */}
-        <div className="text-center mt-16">
+        {/* <div className="text-center mt-16">
           <div className="backdrop-blur-lg bg-base-100/30 border border-base-content/10 rounded-3xl p-8 max-w-2xl mx-auto shadow-xl">
             <h3 className="text-2xl font-bold text-base-content mb-4">Ready to Create Your Own Story?</h3>
             <p className="text-base-content/70 mb-6">
@@ -116,7 +116,7 @@ const Testimonials = () => {
               Start Your Journey
             </Link>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

@@ -1,6 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FaHeart, FaMapMarkerAlt, FaBirthdayCake, FaWeight, FaVenus, FaMars, FaInfoCircle } from 'react-icons/fa';
+import {
+  FaHeart,
+  FaMapMarkerAlt,
+  FaWeight,
+  FaVenus,
+  FaMars,
+  FaInfoCircle,
+  FaPaw
+} from 'react-icons/fa';
 
 const PetCard = ({ pet }) => {
   const getGenderIcon = (gender) => {
@@ -20,13 +28,15 @@ const PetCard = ({ pet }) => {
           alt={pet.name}
           className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
         />
-        
+
         {/* Status Badge */}
         <div className="absolute top-4 left-4">
-          <span className={`
-            px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm
-            ${pet.adopted ? 'bg-success/80 text-success-content' : 'bg-primary/80 text-primary-content'}
-          `}>
+          <span
+            className={`
+              px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm
+              ${pet.adopted ? 'bg-success/80 text-success-content' : 'bg-primary/80 text-primary-content'}
+            `}
+          >
             {pet.adopted ? 'Adopted' : 'Available'}
           </span>
         </div>
@@ -42,31 +52,35 @@ const PetCard = ({ pet }) => {
         <h3 className="font-secondary font-bold text-xl mb-2 text-base-content group-hover:text-primary transition-colors">
           {pet.name}
         </h3>
-        
+
         <div className="space-y-2 mb-4">
           <div className="flex items-center gap-2 text-base-content/70">
             <FaMapMarkerAlt className="w-4 h-4 text-primary" />
             <span className="text-sm">{pet.location}</span>
           </div>
-          
-          <div className="flex items-center gap-4 text-sm">
+
+          {pet.breed && (
             <div className="flex items-center gap-1">
-              <FaBirthdayCake className="w-4 h-4 text-secondary" />
-              <span className="text-base-content/70">{pet.age}</span>
+              <FaPaw className="w-4 h-4 text-secondary" />
+              <span className="text-base-content/70">{pet.breed}</span>
             </div>
-            
+          )}
+
+          {pet.weight && (
             <div className="flex items-center gap-1">
-              <FaWeight className="w-4 h-4 text-accent" />
-              <span className="text-base-content/70">{pet.weight}</span>
+              <FaWeight className="w-4 h-4 text-secondary" />
+              <span className="text-base-content/70">{pet.weight} kg</span>
             </div>
-            
+          )}
+
+          {pet.gender && (
             <div className="flex items-center gap-1">
-              {React.createElement(getGenderIcon(pet.gender), { 
-                className: `w-4 h-4 ${getGenderColor(pet.gender)}` 
+              {React.createElement(getGenderIcon(pet.gender), {
+                className: `w-4 h-4 ${getGenderColor(pet.gender)}`
               })}
               <span className="text-base-content/70">{pet.gender}</span>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Description */}
