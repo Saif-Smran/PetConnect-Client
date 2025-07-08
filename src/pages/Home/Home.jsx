@@ -1,6 +1,7 @@
 import React from 'react';
 import Hero from './Hero';
 import Category from './Category';
+import CallToAction from './CallToAction';
 
 
 const Home = () => {
@@ -10,6 +11,7 @@ const Home = () => {
         <div className="max-w-11/12 mx-auto my-5">
             <Hero></Hero>
             <Category></Category>
+            <CallToAction></CallToAction>
         </div>
     );
 };
