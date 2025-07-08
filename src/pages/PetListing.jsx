@@ -3,7 +3,7 @@ import React from 'react';
 const PetListing = () => {
     return (
         <div className="min-h-screen py-12 px-4">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-11/12 mx-auto">
                 <div className="text-center mb-12">
                     <h1 className="font-secondary font-bold text-5xl mb-4">
                         🐾 Pet Listing

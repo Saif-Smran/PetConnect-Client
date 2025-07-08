@@ -5,7 +5,7 @@ import { MdPets } from 'react-icons/md';
 const Hero = () => {
   return (
     <section
-      className="relative w-full min-h-screen flex items-center justify-center bg-center bg-cover bg-no-repeat bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 rounded-2xl"
+      className="relative max-w-11/12 mx-auto min-h-screen flex items-center justify-center bg-center bg-cover bg-no-repeat bg-gradient-to-br from-primary/10 via-secondary/5 to-accent/10 rounded-2xl"
       style={{
         backgroundImage: "url('/BannerBGImage.jpg')",
       }}

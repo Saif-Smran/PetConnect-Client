@@ -27,7 +27,7 @@ const AboutUs = () => {
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-secondary/3"></div>
       
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-11/12 mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Text content */}
           <div className="space-y-8">

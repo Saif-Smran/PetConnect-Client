@@ -52,7 +52,7 @@ const Category = () => {
 
   return (
     <section className="py-16 bg-gradient-to-br from-base-100 via-base-200/50 to-base-100">
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-11/12 mx-auto px-6">
         {/* Section Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 rounded-full text-primary font-medium mb-4">

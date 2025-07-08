@@ -6,7 +6,7 @@ const Dashboard = () => {
 
     return (
         <div className="min-h-screen py-12 px-4">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-11/12 mx-auto">
                 <div className="mb-12">
                     <h1 className="font-secondary font-bold text-4xl mb-4">
                         📊 Dashboard
