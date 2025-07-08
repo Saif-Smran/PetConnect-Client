@@ -1,4 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
- @plugin "daisyui" {
-   themes: light --default, dark --prefersdark;
- }
+
+/* DaisyUI themes will be loaded from tailwind.config.js */
+/* Your custom themes: clean-modern-light and clean-modern-dark are configured there */
+
+/* Base Styles */
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* Typography Classes */
+.font-primary {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.font-secondary {
+  font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+}
+
+/* 
+IMPORTANT: Your custom DaisyUI themes configuration
+This configuration is applied via tailwind.config.js
+*/
+@plugin "daisyui" {
+  themes: light --petconnecttheme, dark --petconnecttheme, cupcake;
+}
+@plugin "daisyui/theme" {
+  name: "petconnecttheme";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: #FAFAF9;
+  --color-base-200: #F3F4F6;
+  --color-base-300: #E5E7EB;
+  --color-base-content: #1F2937;
+  
+  --color-primary: #2CA58D;
+  --color-primary-content: #FFFFFF;
+  
+  --color-secondary: #F76C5E;
+  --color-secondary-content: #FFFFFF;
+  
+  --color-accent: #FBBF24;
+  --color-accent-content: #1F2937;
+
+  --color-neutral: #EDEDED;
+  --color-neutral-content: #1F2937;
+
+  --color-info: #38BDF8;
+  --color-info-content: #FFFFFF;
+
+  --color-success: #10B981;
+  --color-success-content: #FFFFFF;
+
+  --color-warning: #F59E0B;
+  --color-warning-content: #1F2937;
+
+  --color-error: #EF4444;
+  --color-error-content: #FFFFFF;
+
+  --radius-selector: 0.75rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+
+  --depth: 1;
+  --noise: 0;
+}
+
+/* Dark mode override */
+@plugin "daisyui/theme" {
+  name: "petconnecttheme-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: #0D0D0D;
+  --color-base-200: #1A1A1A;
+  --color-base-300: #2A2A2A;
+  --color-base-content: #F3F4F6;
+
+  --color-primary: #24917B;
+  --color-primary-content: #FFFFFF;
+
+  --color-secondary: #DC5A4F;
+  --color-secondary-content: #FFFFFF;
+
+  --color-accent: #FBBF24;
+  --color-accent-content: #F3F4F6;
+
+  --color-neutral: #2A2A2A;
+  --color-neutral-content: #F3F4F6;
+
+  --color-info: #38BDF8;
+  --color-info-content: #FFFFFF;
+
+  --color-success: #10B981;
+  --color-success-content: #FFFFFF;
+
+  --color-warning: #F59E0B;
+  --color-warning-content: #1F2937;
+
+  --color-error: #EF4444;
+  --color-error-content: #FFFFFF;
+
+  --radius-selector: 0.75rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+
+  --depth: 1;
+  --noise: 0;
+}
