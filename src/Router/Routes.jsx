@@ -1,12 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../Layout/MainLayout";
 import Home from "../pages/Home/Home";
-import PetListing from "../pages/PetListing";
+
+import PetDetails from "../pages/PetDetails";
 import DonationCampaigns from "../pages/DonationCampaigns";
 import About from "../pages/About";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
+import Petlist from "../pages/PetList/Petlist";
 
 const route = createBrowserRouter([
     {
@@ -19,7 +21,11 @@ const route = createBrowserRouter([
             },
             {
                 path: "/pets",
-                element: <PetListing></PetListing>
+                element: <Petlist></Petlist>
+            },
+            {
+                path: "/pet/:id",
+                element: <PetDetails></PetDetails>
             },
             {
                 path: "/donations",
