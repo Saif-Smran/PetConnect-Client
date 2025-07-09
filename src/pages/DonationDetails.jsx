@@ -53,7 +53,7 @@ const DonationDetails = () => {
 
   // Handle both old and new data formats
   const title = donation.title || donation.petName || 'Untitled Campaign';
-  const image = donation.image || donation.petImage || 'https://via.placeholder.com/600x400/e2e8f0/64748b?text=Pet+Image';
+  const image = donation.image || donation.petImage || '/placeholder.jpg';
   const target = donation.target || donation.maxDonation || 0;
   const raised = donation.raised || donation.donatedAmount || 0;
   const organizer = donation.organizer || 'Unknown';
@@ -76,9 +76,6 @@ const DonationDetails = () => {
               src={image}
               alt={title}
               className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/600x400/e2e8f0/64748b?text=Pet+Image';
-              }}
             />
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-end">
               <div className="p-6 text-white">

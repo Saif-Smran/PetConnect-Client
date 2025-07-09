@@ -1,9 +1,58 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import AdminDashboard from '../components/Admin/AdminDashboard';
 
 const Dashboard = () => {
     const { user } = useAuth();
+    const [userRole, setUserRole] = useState(null);
+    const [loading, setLoading] = useState(true);
 
+    // Fetch user role from database
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            if (user?.uid) {
+                try {
+                    const token = localStorage.getItem('access_token');
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        setUserRole(userData.role);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user role:', error);
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false);
+            }
+        };
+
+        fetchUserRole();
+    }, [user]);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                    <p>Loading dashboard...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Show admin dashboard if user is admin
+    if (userRole === 'admin') {
+        return <AdminDashboard />;
+    }
+
+    // Regular user dashboard
     return (
         <div className="min-h-screen py-12 px-4">
             <div className="max-w-11/12 mx-auto">

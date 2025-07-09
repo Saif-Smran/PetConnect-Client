@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { showConfirmation, showSuccess } from '../utils/notifications';
 
 import { 
     HiHome, 
@@ -27,12 +28,38 @@ import {
 import { FiLogIn, FiUserPlus } from 'react-icons/fi';
 
 const Navbar = () => {
-    const { user, Logout } = useAuth();
+    const { user, logout } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [userRole, setUserRole] = useState(null);
     const dropdownRef = useRef(null);
+
+    // Fetch user role
+    useEffect(() => {
+        const fetchUserRole = async () => {
+            if (user?.uid) {
+                try {
+                    const token = localStorage.getItem('access_token');
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.ok) {
+                        const userData = await response.json();
+                        setUserRole(userData.role);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user role:', error);
+                }
+            }
+        };
+
+        fetchUserRole();
+    }, [user]);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -59,12 +86,21 @@ const Navbar = () => {
     const isActive = (path) => location.pathname === path;
 
     const handleLogout = async () => {
-        try {
-            await Logout();
-            setIsDropdownOpen(false);
-            navigate('/');
-        } catch (error) {
-            console.error('Logout error:', error);
+        const result = await showConfirmation(
+            'Logout Confirmation',
+            'Are you sure you want to logout?',
+            'Yes, Logout'
+        );
+
+        if (result.isConfirmed) {
+            try {
+                await logout();
+                setIsDropdownOpen(false);
+                showSuccess('Logged Out', 'You have been successfully logged out.');
+                navigate('/');
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
         }
     };
 
@@ -157,7 +193,7 @@ const Navbar = () => {
                                             {user.displayName || 'User'}
                                         </p>
                                         <p className="font-primary text-xs opacity-70">
-                                            Welcome back!
+                                            {userRole === 'admin' ? '👑 Admin' : '👤 User'}
                                         </p>
                                     </div>
                                     <HiChevronDown className={`w-4 h-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
@@ -180,6 +216,15 @@ const Navbar = () => {
                                                     <p className="font-primary text-xs opacity-70 truncate max-w-[180px]">
                                                         {user.email}
                                                     </p>
+                                                    {userRole && (
+                                                        <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full mt-1 ${
+                                                            userRole === 'admin' 
+                                                                ? 'bg-green-100 text-green-800'
+                                                                : 'bg-blue-100 text-blue-800'
+                                                        }`}>
+                                                            {userRole === 'admin' ? '👑 Admin' : '👤 User'}
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
                                         </div>

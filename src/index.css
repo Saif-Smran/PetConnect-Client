@@ -121,3 +121,293 @@ This configuration is applied via tailwind.config.js
   --depth: 1;
   --noise: 0;
 }
+
+/* Custom Authentication Page Styles */
+.auth-gradient-bg {
+  background: linear-gradient(135deg, 
+    hsl(210, 60%, 98%) 0%, 
+    hsl(190, 60%, 95%) 25%, 
+    hsl(170, 60%, 95%) 50%, 
+    hsl(210, 60%, 98%) 100%);
+  background-size: 400% 400%;
+  animation: authGradientShift 15s ease infinite;
+}
+
+.auth-register-gradient-bg {
+  background: linear-gradient(135deg, 
+    hsl(120, 60%, 98%) 0%, 
+    hsl(150, 60%, 95%) 25%, 
+    hsl(190, 60%, 95%) 50%, 
+    hsl(120, 60%, 98%) 100%);
+  background-size: 400% 400%;
+  animation: authGradientShift 15s ease infinite;
+}
+
+@keyframes authGradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Enhanced card styles */
+.auth-card {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Dark mode support for authentication pages */
+[data-theme="dark"] .auth-gradient-bg {
+  background: linear-gradient(135deg, 
+    hsl(220, 30%, 8%) 0%, 
+    hsl(230, 25%, 12%) 25%, 
+    hsl(240, 20%, 10%) 50%, 
+    hsl(220, 30%, 8%) 100%);
+  background-size: 400% 400%;
+  animation: authGradientShift 15s ease infinite;
+}
+
+[data-theme="dark"] .auth-register-gradient-bg {
+  background: linear-gradient(135deg, 
+    hsl(140, 30%, 8%) 0%, 
+    hsl(160, 25%, 12%) 25%, 
+    hsl(180, 20%, 10%) 50%, 
+    hsl(140, 30%, 8%) 100%);
+  background-size: 400% 400%;
+  animation: authGradientShift 15s ease infinite;
+}
+
+/* Dark mode card styles */
+[data-theme="dark"] .auth-card {
+  backdrop-filter: blur(10px);
+  background: rgba(26, 26, 26, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+/* Dark mode text colors */
+[data-theme="dark"] .auth-card h1,
+[data-theme="dark"] .auth-card h2 {
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .auth-card p {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .auth-card label {
+  color: #e5e7eb;
+}
+
+/* Dark mode input styles */
+[data-theme="dark"] .auth-card input {
+  background: rgba(31, 41, 55, 0.8);
+  border-color: #374151;
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .auth-card input:hover {
+  border-color: #4b5563;
+}
+
+[data-theme="dark"] .auth-card input:focus {
+  border-color: #2CA58D;
+  background: rgba(31, 41, 55, 0.9);
+}
+
+[data-theme="dark"] .auth-card input::placeholder {
+  color: #9ca3af;
+}
+
+/* Dark mode input glow effect */
+[data-theme="dark"] .input-glow:focus {
+  box-shadow: 
+    0 0 0 4px rgba(44, 165, 141, 0.2),
+    0 0 20px rgba(44, 165, 141, 0.3);
+}
+
+/* Dark mode error input styles */
+[data-theme="dark"] .auth-card input.border-red-400 {
+  border-color: #dc2626;
+  background: rgba(127, 29, 29, 0.2);
+}
+
+/* Dark mode social buttons */
+[data-theme="dark"] .social-btn {
+  background: rgba(31, 41, 55, 0.6);
+  border-color: #4b5563;
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .social-btn:hover {
+  background: rgba(55, 65, 81, 0.8);
+  border-color: #6b7280;
+}
+
+/* Dark mode divider */
+[data-theme="dark"] .auth-card .border-gray-200 {
+  border-color: #4b5563;
+}
+
+[data-theme="dark"] .auth-card .text-gray-500 {
+  color: #9ca3af;
+  background: rgba(26, 26, 26, 0.95);
+}
+
+[data-theme="dark"] .auth-card .text-gray-600 {
+  color: #d1d5db;
+}
+
+/* Dark mode profile upload area */
+[data-theme="dark"] .profile-upload-area .border-primary\/20 {
+  border-color: rgba(44, 165, 141, 0.3);
+}
+
+[data-theme="dark"] .profile-upload-area .from-primary\/10 {
+  background: linear-gradient(to bottom right, rgba(44, 165, 141, 0.15), rgba(59, 130, 246, 0.15));
+}
+
+[data-theme="dark"] .profile-upload-area .text-primary\/60 {
+  color: rgba(44, 165, 141, 0.8);
+}
+
+/* Dark mode floating animation enhancement */
+[data-theme="dark"] .floating-animation {
+  filter: drop-shadow(0 0 20px rgba(44, 165, 141, 0.3));
+}
+
+/* Dark mode link styles */
+[data-theme="dark"] .auth-card a {
+  color: #34d399;
+}
+
+[data-theme="dark"] .auth-card a:hover {
+  color: #10b981;
+}
+
+/* Floating animation for Lottie animations */
+.floating-animation {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes floating {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Input focus glow effect */
+.input-glow:focus {
+  box-shadow: 
+    0 0 0 4px rgba(44, 165, 141, 0.1),
+    0 0 20px rgba(44, 165, 141, 0.2);
+}
+
+/* Button hover effects */
+.btn-gradient-hover {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-gradient-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-gradient-hover:hover::before {
+  left: 100%;
+}
+
+/* Social button hover effects */
+.social-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced loading spinner */
+.loading-spinner {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 2px solid white;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .auth-card {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .auth-gradient-bg,
+  .auth-register-gradient-bg {
+    min-height: 100vh;
+    padding: 1rem 0;
+  }
+}
+
+/* Enhanced error message styles */
+.error-message {
+  animation: errorSlideIn 0.3s ease-out;
+}
+
+@keyframes errorSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Profile image upload hover effect */
+.profile-upload-area {
+  transition: all 0.3s ease;
+}
+
+.profile-upload-area:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(44, 165, 141, 0.2);
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #2CA58D, #24917B);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #24917B, #1e7a68);
+}
