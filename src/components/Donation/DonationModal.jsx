@@ -85,49 +85,73 @@ const CheckoutForm = ({ donation, amount, onSuccess, onClose }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Card Details
+        <label className="label">
+          <span className="label-text text-base font-medium">Card Details</span>
         </label>
-        <div className="border border-gray-300 rounded-lg p-4 bg-white">
-          <CardElement
-            options={{
-              style: {
-                base: {
-                  fontSize: '16px',
-                  color: '#424770',
-                  '::placeholder': {
-                    color: '#aab7c4',
+        <div className="card bg-base-100 border border-base-content/20 shadow-sm">
+          <div className="card-body p-4">
+            <CardElement
+              options={{
+                style: {
+                  base: {
+                    fontSize: '16px',
+                    color: '#374151',
+                    fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif',
+                    fontSmoothing: 'antialiased',
+                    lineHeight: '1.5',
+                    '::placeholder': {
+                      color: '#9CA3AF',
+                    },
+                    ':focus': {
+                      color: '#111827',
+                    },
+                  },
+                  invalid: {
+                    color: '#EF4444',
+                    iconColor: '#EF4444'
+                  },
+                  complete: {
+                    color: '#059669',
+                    iconColor: '#059669'
                   },
                 },
-                invalid: {
-                  color: '#9e2146',
-                },
-              },
-            }}
-          />
+                hidePostalCode: true,
+              }}
+            />
+          </div>
         </div>
+        <label className="label">
+          <span className="label-text-alt text-xs text-base-content/60">
+            Enter your card number, expiry date, and CVC
+          </span>
+        </label>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-          <p className="text-red-600 text-sm">{error}</p>
+        <div className="alert alert-error shadow-lg animate-in slide-in-from-top-2 duration-300">
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="font-medium">{error}</span>
+          </div>
         </div>
       )}
 
       <button
         type="submit"
         disabled={!stripe || isProcessing}
-        className="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+        className="btn btn-primary btn-lg w-full gap-3 bg-gradient-to-r from-primary to-secondary border-none hover:scale-[1.02] hover:shadow-2xl transition-all duration-300 group"
       >
         {isProcessing ? (
           <>
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-            Processing...
+            <span className="loading loading-spinner loading-sm"></span>
+            <span className="animate-pulse">Processing Payment...</span>
           </>
         ) : (
           <>
-            <FaDonate />
-            Donate ${amount}
+            <FaDonate className="text-lg group-hover:animate-bounce" />
+            <span className="font-semibold">Donate ${amount}</span>
           </>
         )}
       </button>
@@ -140,6 +164,23 @@ const DonationModal = ({ isOpen, onClose, donation }) => {
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const { user } = useAuth();
+
+  // Disable background scrolling when modal is open
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '0px'; // Prevent layout shift
+    } else {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = '';
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.body.style.paddingRight = '';
+    };
+  }, [isOpen]);
 
   // Close modal if user is not authenticated
   React.useEffect(() => {
@@ -181,112 +222,146 @@ const DonationModal = ({ isOpen, onClose, donation }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+    <div 
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300"
+      onClick={(e) => {
+        // Close modal when clicking on backdrop
+        if (e.target === e.currentTarget) {
+          handleClose();
+        }
+      }}
+    >
+      <div className="card bg-gradient-to-br from-base-100/95 to-base-200/95 backdrop-blur-xl shadow-2xl border border-base-content/10 w-full max-w-md max-h-[95vh] transform transition-all duration-500 scale-100 opacity-100 animate-in slide-in-from-bottom-4 flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-violet-500 rounded-full flex items-center justify-center">
-              <FaDonate className="text-white" />
-            </div>
-            <div>
-              <h2 className="text-xl font-bold text-gray-800">Make a Donation</h2>
-              <p className="text-sm text-gray-600">Support: {donation?.title}</p>
-            </div>
-          </div>
-          <button
-            onClick={handleClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <FaTimes size={20} />
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className="p-6">
-          {!user ? (
-            <div className="text-center py-8">
-              <FaCreditCard className="mx-auto text-4xl text-gray-400 mb-4" />
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Login Required</h3>
-              <p className="text-gray-600 mb-4">
-                Please login to make a donation
-              </p>
-              <button
-                onClick={handleClose}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg"
-              >
-                Close
-              </button>
-            </div>
-          ) : showSuccess ? (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FaDonate className="text-2xl text-green-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">Thank You!</h3>
-              <p className="text-gray-600">Your donation has been processed successfully.</p>
-            </div>
-          ) : (
-            <Elements stripe={stripePromise}>
-              <div className="space-y-6">
-                {/* Amount Selection */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Choose Donation Amount
-                  </label>
-                  
-                  {/* Preset Amounts */}
-                  <div className="grid grid-cols-3 gap-2 mb-4">
-                    {presetAmounts.map((preset) => (
-                      <button
-                        key={preset}
-                        type="button"
-                        onClick={() => handlePresetClick(preset)}
-                        className={`p-3 border-2 rounded-lg font-medium transition-all ${
-                          selectedPreset === preset
-                            ? 'border-blue-500 bg-blue-50 text-blue-700'
-                            : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                        }`}
-                      >
-                        ${preset}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Custom Amount */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Or enter custom amount
-                    </label>
-                    <div className="relative">
-                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 font-medium">
-                        $
-                      </span>
-                      <input
-                        type="text"
-                        value={amount}
-                        onChange={handleCustomAmountChange}
-                        placeholder="Enter amount"
-                        className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                    </div>
+        <div className="card-body p-0 flex-shrink-0">
+          <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 border-b border-base-content/10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="avatar placeholder">
+                  <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full">
+                    <FaDonate className="text-white text-lg" />
                   </div>
                 </div>
-
-                {/* Payment Form */}
-                {amount && parseInt(amount) > 0 && (
-                  <div className="border-t border-gray-200 pt-6">
-                    <CheckoutForm
-                      donation={donation}
-                      amount={parseInt(amount)}
-                      onSuccess={handleSuccess}
-                      onClose={handleClose}
-                    />
-                  </div>
-                )}
+                <div>
+                  <h2 className="card-title text-xl">Make a Donation</h2>
+                  <p className="text-sm text-base-content/70">Support: {donation?.title}</p>
+                </div>
               </div>
-            </Elements>
-          )}
+              <button
+                onClick={handleClose}
+                className="btn btn-ghost btn-sm btn-circle hover:bg-base-content/10 transition-all duration-200 hover:scale-110"
+              >
+                <FaTimes size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* Content */}
+          <div className="p-6 overflow-y-auto flex-1">
+            {!user ? (
+              <div className="text-center py-8">
+                <div className="avatar placeholder mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-error/20 to-warning/20 rounded-full">
+                    <FaCreditCard className="text-3xl text-error" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold text-base-content mb-2">Login Required</h3>
+                <p className="text-base-content/70 mb-4">
+                  Please login to make a donation
+                </p>
+                <button
+                  onClick={handleClose}
+                  className="btn btn-primary gap-2 hover:scale-105 transition-transform duration-200"
+                >
+                  <FaTimes />
+                  Close
+                </button>
+              </div>
+            ) : showSuccess ? (
+              <div className="text-center py-8">
+                <div className="avatar placeholder mb-4">
+                  <div className="w-16 h-16 bg-gradient-to-r from-success/20 to-primary/20 rounded-full animate-pulse">
+                    <FaDonate className="text-2xl text-success" />
+                  </div>
+                </div>
+                <h3 className="text-lg font-semibold text-base-content mb-2">Thank You!</h3>
+                <p className="text-base-content/70">Your donation has been processed successfully.</p>
+              </div>
+            ) : (
+              <Elements stripe={stripePromise}>
+                <div className="space-y-6">
+                  {/* Amount Selection */}
+                  <div>
+                    <label className="label">
+                      <span className="label-text text-base font-medium">Choose Donation Amount</span>
+                    </label>
+                    
+                    {/* Preset Amounts */}
+                    <div className="grid grid-cols-3 gap-3 mb-4">
+                      {presetAmounts.map((preset) => (
+                        <button
+                          key={preset}
+                          type="button"
+                          onClick={() => handlePresetClick(preset)}
+                          className={`btn btn-outline transition-all duration-300 hover:scale-105 ${
+                            selectedPreset === preset
+                              ? 'btn-primary shadow-lg'
+                              : 'hover:btn-primary'
+                          }`}
+                        >
+                          ${preset}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Custom Amount */}
+                    <div>
+                      <label className="label">
+                        <span className="label-text text-sm">Or enter custom amount</span>
+                      </label>
+                      <label className="input-group">
+                        <span className="bg-base-200">$</span>
+                        <input
+                          type="text"
+                          value={amount}
+                          onChange={handleCustomAmountChange}
+                          placeholder="Enter amount"
+                          className="input input-bordered flex-1 focus:input-primary transition-all duration-300"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Payment Form */}
+                  {amount && parseInt(amount) > 0 && (
+                    <div className="divider">Payment Details</div>
+                  )}
+                  
+                  {amount && parseInt(amount) > 0 && (
+                    <div className="card bg-gradient-to-r from-primary/5 to-secondary/5 border border-base-content/10">
+                      <div className="card-body p-4">
+                        <div className="flex items-center gap-2 mb-4">
+                          <div className="avatar placeholder">
+                            <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-full">
+                              <FaCreditCard className="text-white text-sm" />
+                            </div>
+                          </div>
+                          <h3 className="font-semibold text-base-content">Payment Details</h3>
+                        </div>
+                        <CheckoutForm
+                          donation={donation}
+                          amount={parseInt(amount)}
+                          onSuccess={handleSuccess}
+                          onClose={handleClose}
+                          className= 'text-base-content/70'
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Elements>
+            )}
+          </div>
         </div>
       </div>
     </div>

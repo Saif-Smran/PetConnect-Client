@@ -7,6 +7,7 @@ import { FaInfoCircle, FaDonate, FaHeart, FaBullseye } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
 import Swal from 'sweetalert2';
 import { useAuth } from '../hooks/useAuth';
+import DonationModal from '../components/Donation/DonationModal';
 
 const fetchDonations = async ({ pageParam = 0 }) => {
   const limit = 6;
@@ -18,6 +19,7 @@ const DonationCampaigns = () => {
   const [selectedAmount, setSelectedAmount] = React.useState(null);
   const [showCustomAmount, setShowCustomAmount] = React.useState(false);
   const [customAmount, setCustomAmount] = React.useState('');
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -108,66 +110,25 @@ const DonationCampaigns = () => {
       return;
     }
 
-    const amount = selectedAmount || customAmount || 25; // Default to $25 if nothing selected
-    
-    // Show donation confirmation modal
-    Swal.fire({
-      title: 'Confirm Your Donation',
-      html: `
-        <div class="text-center">
-          <div class="text-6xl mb-4">💝</div>
-          <p class="text-lg mb-4">You're about to donate <strong class="text-primary">$${amount}</strong></p>
-          <p class="text-sm text-gray-600">Your generosity will help save pet lives!</p>
-        </div>
-      `,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: '💖 Donate Now',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#10b981',
-      cancelButtonColor: '#6b7280',
-      focusConfirm: true
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Simulate processing
-        Swal.fire({
-          title: 'Processing...',
-          text: 'Please wait while we process your donation',
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          showConfirmButton: false,
-          didOpen: () => {
-            Swal.showLoading();
-          }
-        });
+    // Open the donation modal
+    setIsModalOpen(true);
+  };
 
-        // Simulate API call delay
-        setTimeout(() => {
-          Swal.fire({
-            title: 'Thank You! 🎉',
-            html: `
-              <div class="text-center">
-                <div class="text-6xl mb-4">🐾❤️</div>
-                <p class="text-lg mb-2">Your donation of <strong class="text-green-600">$${amount}</strong> has been processed!</p>
-                <p class="text-sm text-gray-600 mb-4">You'll receive a confirmation email shortly.</p>
-                <div class="bg-green-50 p-4 rounded-lg">
-                  <p class="text-sm font-medium text-green-800">Impact: Your donation will help provide food, medical care, and shelter for pets in need!</p>
-                </div>
-              </div>
-            `,
-            icon: 'success',
-            confirmButtonText: 'Continue Helping',
-            confirmButtonColor: '#10b981',
-            allowOutsideClick: false
-          }).then(() => {
-            // Reset the form after successful donation
-            setSelectedAmount(null);
-            setCustomAmount('');
-            setShowCustomAmount(false);
-          });
-        }, 2000);
-      }
-    });
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  // Create a general donation object for the modal
+  const generalDonation = {
+    _id: 'general-donation',
+    title: 'General Pet Care Fund',
+    description: 'Support our general fund to help pets in need',
+    image: '/api/placeholder/400/300',
+    target: 10000,
+    raised: 6500,
+    petName: 'All Pets',
+    petAge: 'Various',
+    category: 'General Support'
   };
 
   const { ref, inView } = useInView({
@@ -587,6 +548,13 @@ const DonationCampaigns = () => {
           </>
         )}
       </div>
+
+      {/* Donation Modal */}
+      <DonationModal 
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        donation={generalDonation}
+      />
     </div>
   );
 };
