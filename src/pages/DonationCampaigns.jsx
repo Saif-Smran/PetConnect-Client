@@ -2,9 +2,11 @@ import React from 'react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaInfoCircle, FaDonate, FaHeart, FaBullseye } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
+import Swal from 'sweetalert2';
+import { useAuth } from '../hooks/useAuth';
 
 const fetchDonations = async ({ pageParam = 0 }) => {
   const limit = 6;
@@ -13,6 +15,12 @@ const fetchDonations = async ({ pageParam = 0 }) => {
 };
 
 const DonationCampaigns = () => {
+  const [selectedAmount, setSelectedAmount] = React.useState(null);
+  const [showCustomAmount, setShowCustomAmount] = React.useState(false);
+  const [customAmount, setCustomAmount] = React.useState('');
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   const {
     data,
     fetchNextPage,
@@ -30,6 +38,137 @@ const DonationCampaigns = () => {
     refetchOnWindowFocus: false,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
+
+  const handleDonationClick = (amount) => {
+    setSelectedAmount(amount);
+    setShowCustomAmount(false);
+    // Show selection confirmation
+    Swal.fire({
+      title: 'Amount Selected!',
+      text: `You've selected $${amount} for donation`,
+      icon: 'success',
+      timer: 1500,
+      showConfirmButton: false,
+      toast: true,
+      position: 'top-end'
+    });
+  };
+
+  const handleCustomAmountClick = () => {
+    setShowCustomAmount(true);
+    setSelectedAmount(null);
+  };
+
+  const handleCustomAmountSubmit = () => {
+    if (customAmount && parseFloat(customAmount) > 0) {
+      setSelectedAmount(parseFloat(customAmount));
+      setShowCustomAmount(false);
+      // Show custom amount confirmation
+      Swal.fire({
+        title: 'Custom Amount Set!',
+        text: `You've set $${customAmount} for donation`,
+        icon: 'success',
+        timer: 1500,
+        showConfirmButton: false,
+        toast: true,
+        position: 'top-end'
+      });
+    } else {
+      // Show error for invalid amount
+      Swal.fire({
+        title: 'Invalid Amount',
+        text: 'Please enter a valid amount greater than $0',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+        confirmButtonColor: '#ef4444'
+      });
+    }
+  };
+
+  const handleDonationDetails = (donationId) => {
+    navigate(`/donations/${donationId}`);
+  };
+
+  const handleMainDonateClick = () => {
+    if (!user) {
+      Swal.fire({
+        title: 'Login Required',
+        text: 'Please log in to make a donation',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Go to Login',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/login');
+        }
+      });
+      return;
+    }
+
+    const amount = selectedAmount || customAmount || 25; // Default to $25 if nothing selected
+    
+    // Show donation confirmation modal
+    Swal.fire({
+      title: 'Confirm Your Donation',
+      html: `
+        <div class="text-center">
+          <div class="text-6xl mb-4">💝</div>
+          <p class="text-lg mb-4">You're about to donate <strong class="text-primary">$${amount}</strong></p>
+          <p class="text-sm text-gray-600">Your generosity will help save pet lives!</p>
+        </div>
+      `,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '💖 Donate Now',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#10b981',
+      cancelButtonColor: '#6b7280',
+      focusConfirm: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Simulate processing
+        Swal.fire({
+          title: 'Processing...',
+          text: 'Please wait while we process your donation',
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        // Simulate API call delay
+        setTimeout(() => {
+          Swal.fire({
+            title: 'Thank You! 🎉',
+            html: `
+              <div class="text-center">
+                <div class="text-6xl mb-4">🐾❤️</div>
+                <p class="text-lg mb-2">Your donation of <strong class="text-green-600">$${amount}</strong> has been processed!</p>
+                <p class="text-sm text-gray-600 mb-4">You'll receive a confirmation email shortly.</p>
+                <div class="bg-green-50 p-4 rounded-lg">
+                  <p class="text-sm font-medium text-green-800">Impact: Your donation will help provide food, medical care, and shelter for pets in need!</p>
+                </div>
+              </div>
+            `,
+            icon: 'success',
+            confirmButtonText: 'Continue Helping',
+            confirmButtonColor: '#10b981',
+            allowOutsideClick: false
+          }).then(() => {
+            // Reset the form after successful donation
+            setSelectedAmount(null);
+            setCustomAmount('');
+            setShowCustomAmount(false);
+          });
+        }, 2000);
+      }
+    });
+  };
 
   const { ref, inView } = useInView({
     threshold: 0.1,
@@ -114,7 +253,12 @@ const DonationCampaigns = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {allDonations.map((donation, index) => {
-                const progressPercentage = Math.min((donation.donatedAmount / donation.maxDonation) * 100, 100);
+                // Handle both old and new data formats
+                const title = donation.title || donation.petName || 'Untitled Campaign';
+                const image = donation.image || donation.petImage || '/placeholder.jpg';
+                const target = donation.target || donation.maxDonation || 0;
+                const raised = donation.raised || donation.donatedAmount || 0;
+                const progressPercentage = target > 0 ? Math.min((raised / target) * 100, 100) : 0;
                 
                 return (
                   <div
@@ -124,8 +268,8 @@ const DonationCampaigns = () => {
                     {/* Campaign Image */}
                     <div className="relative h-64 overflow-hidden">
                       <img
-                        src={donation.petImage}
-                        alt={donation.petName}
+                        src={image}
+                        alt={title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
                       {/* Urgent Badge */}
@@ -154,7 +298,7 @@ const DonationCampaigns = () => {
                     {/* Campaign Content */}
                     <div className="p-6">
                       <h3 className="font-secondary font-bold text-2xl mb-3 text-base-content group-hover:text-primary transition-colors">
-                        Help {donation.petName}
+                        {title}
                       </h3>
                       
                       {/* Donation Stats */}
@@ -164,7 +308,7 @@ const DonationCampaigns = () => {
                             <FaBullseye className="w-4 h-4 text-primary" />
                             <span className="text-sm font-medium">Goal:</span>
                           </div>
-                          <span className="text-lg font-bold text-primary">${donation.maxDonation.toLocaleString()}</span>
+                          <span className="text-lg font-bold text-primary">${target.toLocaleString()}</span>
                         </div>
                         
                         <div className="flex items-center justify-between">
@@ -172,7 +316,7 @@ const DonationCampaigns = () => {
                             <FaHeart className="w-4 h-4 text-secondary" />
                             <span className="text-sm font-medium">Raised:</span>
                           </div>
-                          <span className="text-lg font-bold text-secondary">${donation.donatedAmount.toLocaleString()}</span>
+                          <span className="text-lg font-bold text-secondary">${raised.toLocaleString()}</span>
                         </div>
                         
                         <div className="flex items-center justify-between">
@@ -180,29 +324,130 @@ const DonationCampaigns = () => {
                             <span className="text-sm font-medium">Remaining:</span>
                           </div>
                           <span className="text-sm font-medium text-base-content/80">
-                            ${(donation.maxDonation - donation.donatedAmount).toLocaleString()}
+                            ${(target - raised).toLocaleString()}
                           </span>
                         </div>
                       </div>
 
                       {/* Action Buttons */}
                       <div className="flex gap-3">
-                        <Link
-                          to={`/donations/${donation._id}`}
+                        <button
+                          onClick={() => handleDonationDetails(donation._id)}
                           className="flex-1 btn btn-outline btn-sm gap-2 hover:btn-primary transition-all duration-300"
                         >
                           <FaInfoCircle className="w-4 h-4" />
                           Details
-                        </Link>
-                        <button className="flex-1 btn btn-primary btn-sm gap-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        </button>
+                        <button 
+                          onClick={() => {
+                            if (!user) {
+                              Swal.fire({
+                                title: 'Login Required',
+                                text: 'Please log in to make a donation',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonText: 'Go to Login',
+                                cancelButtonText: 'Cancel',
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33'
+                              }).then((result) => {
+                                if (result.isConfirmed) {
+                                  navigate('/login');
+                                }
+                              });
+                              return;
+                            }
+                            
+                            Swal.fire({
+                              title: `${title}`,
+                              html: `
+                                <div class="text-center">
+                                  <img src="${image}" alt="${title}" class="w-32 h-32 object-cover rounded-full mx-auto mb-4">
+                                  <p class="text-lg mb-2">Support <strong>${title}</strong></p>
+                                  <div class="bg-blue-50 p-4 rounded-lg mb-4">
+                                    <p class="text-sm"><strong>Goal:</strong> $${target.toLocaleString()}</p>
+                                    <p class="text-sm"><strong>Raised:</strong> $${raised.toLocaleString()}</p>
+                                    <p class="text-sm"><strong>Remaining:</strong> $${(target - raised).toLocaleString()}</p>
+                                  </div>
+                                  <p class="text-sm text-gray-600">Every donation helps save lives!</p>
+                                </div>
+                              `,
+                              icon: 'info',
+                              showCancelButton: true,
+                              confirmButtonText: '💖 Donate Now',
+                              cancelButtonText: 'Maybe Later',
+                              confirmButtonColor: '#10b981',
+                              cancelButtonColor: '#6b7280'
+                            }).then((result) => {
+                              if (result.isConfirmed) {
+                                // Navigate to donation details page
+                                handleDonationDetails(donation._id);
+                              }
+                            });
+                          }}
+                          className="flex-1 btn btn-primary btn-sm gap-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                        >
                           <FaDonate className="w-4 h-4" />
-                          Donate Now
+                          {user ? 'Donate Now' : 'Login to Donate'}
                         </button>
                       </div>
                     </div>
                   </div>
                 );
               })}
+            </div>
+
+            {/* Donor Wall Section */}
+            <div className="mt-20 mb-16">
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/20 rounded-full text-secondary font-medium mb-6">
+                  <FaHeart className="w-5 h-5" />
+                  <span>Our Amazing Donors</span>
+                </div>
+                <h2 className="font-secondary font-bold text-4xl md:text-5xl mb-4 bg-gradient-to-r from-secondary via-accent to-primary bg-clip-text text-transparent">
+                  Thank You Heroes
+                </h2>
+                <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+                  These wonderful people are making a difference in pets' lives with their generous donations
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                {[
+                  { name: "Sarah M.", amount: 250, avatar: "👩‍💼" },
+                  { name: "John D.", amount: 500, avatar: "👨‍🔬" },
+                  { name: "Emma L.", amount: 150, avatar: "👩‍🎨" },
+                  { name: "Michael R.", amount: 300, avatar: "👨‍💻" },
+                  { name: "Lisa K.", amount: 400, avatar: "👩‍⚕️" },
+                  { name: "David S.", amount: 200, avatar: "👨‍🏫" },
+                  { name: "Anna P.", amount: 350, avatar: "👩‍🔬" },
+                  { name: "Tom W.", amount: 180, avatar: "👨‍🎨" },
+                  { name: "Grace H.", amount: 220, avatar: "👩‍💻" },
+                  { name: "Ryan B.", amount: 275, avatar: "👨‍⚕️" },
+                  { name: "Sophie C.", amount: 320, avatar: "👩‍🏫" },
+                  { name: "Alex T.", amount: 190, avatar: "👨‍💼" }
+                ].map((donor, index) => (
+                  <div
+                    key={index}
+                    className="group backdrop-blur-lg bg-base-100/30 border border-base-content/10 rounded-2xl p-4 text-center hover:shadow-xl transition-all duration-300 hover:scale-105"
+                  >
+                    <div className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">
+                      {donor.avatar}
+                    </div>
+                    <h4 className="font-semibold text-base-content mb-1">{donor.name}</h4>
+                    <p className="text-sm text-primary font-bold">${donor.amount}</p>
+                    <div className="flex justify-center mt-2">
+                      <FaHeart className="w-3 h-3 text-red-500" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="text-center mt-8">
+                <p className="text-base-content/60 text-sm">
+                  Join our donor wall by making a donation today!
+                </p>
+              </div>
             </div>
 
             {/* Infinite Scroll Trigger */}
@@ -234,6 +479,110 @@ const DonationCampaigns = () => {
                   </button>
                 </div>
               )}
+            </div>
+
+            {/* Make Your Donation Today CTA Section */}
+            <div className="mt-20 mb-16">
+              <div className="backdrop-blur-lg bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border border-base-content/10 rounded-3xl p-12 text-center">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/20 rounded-full text-accent font-medium mb-6">
+                  <FaDonate className="w-5 h-5" />
+                  <span>Make a Difference</span>
+                </div>
+                
+                <h2 className="font-secondary font-bold text-4xl md:text-6xl mb-6 bg-gradient-to-r from-accent via-primary to-secondary bg-clip-text text-transparent">
+                  Make Your Donation Today
+                </h2>
+                
+                <p className="text-xl md:text-2xl text-base-content/70 max-w-3xl mx-auto leading-relaxed mb-8">
+                  Every contribution counts. Your generosity can provide food, medical care, and shelter for pets in need. 
+                  Together, we can save more lives and give these beautiful animals the love they deserve.
+                </p>
+
+                {/* Impact Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                  <div className="backdrop-blur-lg bg-base-100/30 border border-base-content/10 rounded-2xl p-6">
+                    <div className="text-3xl mb-2">🍽️</div>
+                    <h4 className="text-lg font-bold text-base-content mb-1">$25</h4>
+                    <p className="text-sm text-base-content/70">Feeds a pet for one month</p>
+                  </div>
+                  <div className="backdrop-blur-lg bg-base-100/30 border border-base-content/10 rounded-2xl p-6">
+                    <div className="text-3xl mb-2">🏥</div>
+                    <h4 className="text-lg font-bold text-base-content mb-1">$100</h4>
+                    <p className="text-sm text-base-content/70">Covers basic medical care</p>
+                  </div>
+                  <div className="backdrop-blur-lg bg-base-100/30 border border-base-content/10 rounded-2xl p-6">
+                    <div className="text-3xl mb-2">🏠</div>
+                    <h4 className="text-lg font-bold text-base-content mb-1">$250</h4>
+                    <p className="text-sm text-base-content/70">Provides shelter for a week</p>
+                  </div>
+                </div>
+
+                {/* Quick Donation Amounts */}
+                <div className="flex flex-wrap justify-center gap-4 mb-8">
+                  {[25, 50, 100, 250, 500].map((amount) => (
+                    <button
+                      key={amount}
+                      onClick={() => handleDonationClick(amount)}
+                      className={`btn transition-all duration-300 hover:scale-105 ${
+                        selectedAmount === amount 
+                          ? 'btn-primary' 
+                          : 'btn-outline hover:btn-primary'
+                      }`}
+                    >
+                      ${amount}
+                    </button>
+                  ))}
+                  <button 
+                    onClick={handleCustomAmountClick}
+                    className={`btn transition-all duration-300 hover:scale-105 ${
+                      showCustomAmount 
+                        ? 'btn-accent' 
+                        : 'btn-outline hover:btn-accent'
+                    }`}
+                  >
+                    Custom Amount
+                  </button>
+                </div>
+
+                {/* Custom Amount Input */}
+                {showCustomAmount && (
+                  <div className="flex justify-center gap-4 mb-8">
+                    <input
+                      type="number"
+                      placeholder="Enter amount"
+                      value={customAmount}
+                      onChange={(e) => setCustomAmount(e.target.value)}
+                      className="input input-bordered w-32 text-center"
+                      min="1"
+                    />
+                    <button
+                      onClick={handleCustomAmountSubmit}
+                      className="btn btn-accent btn-sm"
+                    >
+                      Set Amount
+                    </button>
+                  </div>
+                )}
+
+                {/* Main CTA Button */}
+                <div className="space-y-4">
+                  <button 
+                    onClick={handleMainDonateClick}
+                    className="btn btn-primary btn-lg px-8 gap-3 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105"
+                  >
+                    <FaHeart className="w-6 h-6" />
+                    {user ? 'Donate Now & Save Lives' : 'Login to Donate & Save Lives'}
+                    {(selectedAmount || customAmount) && (
+                      <span className="badge badge-secondary ml-2">
+                        ${selectedAmount || customAmount}
+                      </span>
+                    )}
+                  </button>
+                  <p className="text-sm text-base-content/60">
+                    Your donation is secure and tax-deductible. 100% goes directly to pet care.
+                  </p>
+                </div>
+              </div>
             </div>
           </>
         )}

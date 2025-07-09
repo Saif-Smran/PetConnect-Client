@@ -4,6 +4,7 @@ import Home from "../pages/Home/Home";
 
 import PetDetails from "../pages/PetDetails";
 import DonationCampaigns from "../pages/DonationCampaigns";
+import DonationDetails from "../pages/DonationDetails";
 import About from "../pages/About";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
@@ -30,6 +31,10 @@ const route = createBrowserRouter([
             {
                 path: "/donations",
                 element: <DonationCampaigns></DonationCampaigns>
+            },
+            {
+                path: "/donations/:id",
+                element: <DonationDetails></DonationDetails>
             },
             {
                 path: "/about",
