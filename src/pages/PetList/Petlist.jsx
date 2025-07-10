@@ -27,11 +27,15 @@ const fetchPets = async ({ pageParam = 0, queryKey }) => {
 
   // Local filtering by search term
   if (search) {
-    filtered = filtered.filter((pet) =>
-      pet.name.toLowerCase().includes(search.toLowerCase()) ||
-      pet.breed?.toLowerCase().includes(search.toLowerCase()) ||
-      pet.location?.toLowerCase().includes(search.toLowerCase())
-    );
+    filtered = filtered.filter((pet) => {
+      const name = pet.petName || pet.name || '';
+      const breed = pet.petBreed || pet.breed || '';
+      const location = pet.petLocation || pet.location || '';
+      
+      return name.toLowerCase().includes(search.toLowerCase()) ||
+             breed.toLowerCase().includes(search.toLowerCase()) ||
+             location.toLowerCase().includes(search.toLowerCase());
+    });
   }
 
   return filtered;

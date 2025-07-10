@@ -40,7 +40,8 @@ const AuthProvider = ({ children }) => {
     const logout = () => {
         setLoading(true)
         setAuthError(null)
-        localStorage.removeItem('access_token')
+        // Remove Firebase ID token from localStorage 
+        localStorage.removeItem('firebase_id_token')
         return signOut(auth)
     }
 
@@ -85,10 +86,6 @@ const AuthProvider = ({ children }) => {
             
             if (response.ok) {
                 const result = await response.json();
-                // Store JWT token
-                if (result.access_token) {
-                    localStorage.setItem('access_token', result.access_token);
-                }
                 
                 // Show appropriate message
                 if (isFirstTime) {
@@ -115,6 +112,31 @@ const AuthProvider = ({ children }) => {
             
             if (currentUser) {
                 try {
+                    // Clear any existing invalid token first
+                    const existingToken = localStorage.getItem('firebase_id_token');
+                    if (existingToken) {
+                        try {
+                            // Check if existing token is valid
+                            const parts = existingToken.split('.');
+                            if (parts.length === 3) {
+                                const header = JSON.parse(atob(parts[0].replace(/-/g, '+').replace(/_/g, '/')));
+                                if (header.alg !== 'RS256' || !header.kid) {
+                                    console.log('🗑️ Removing invalid token from localStorage');
+                                    localStorage.removeItem('firebase_id_token');
+                                }
+                            }
+                        } catch (e) {
+                            console.log('🗑️ Removing malformed token from localStorage');
+                            localStorage.removeItem('firebase_id_token');
+                        }
+                    }
+                    
+                    // Get Firebase ID token and store it
+                    console.log('🔄 Getting fresh Firebase ID token...');
+                    const idToken = await currentUser.getIdToken(true); // Force refresh
+                    localStorage.setItem('firebase_id_token', idToken);
+                    console.log('✅ Firebase ID token stored:', idToken.substring(0, 20) + '...');
+                    
                     // Check if this is the first time this user is logging in
                     const userExists = await checkUserExists(currentUser.uid);
                     const isFirstTime = !userExists;
@@ -128,11 +150,14 @@ const AuthProvider = ({ children }) => {
                         provider: currentUser.providerData[0]?.providerId || 'password'
                     };
                     
-                    // Save user to database and get JWT token
+                    // Save user to database
                     await saveUserToDatabase(userData, isFirstTime);
                 } catch (error) {
                     console.error('Error in auth state change:', error);
                 }
+            } else {
+                // Remove token when user logs out
+                localStorage.removeItem('firebase_id_token');
             }
             
             setLoading(false)

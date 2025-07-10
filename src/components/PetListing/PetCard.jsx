@@ -11,6 +11,17 @@ import {
 } from 'react-icons/fa';
 
 const PetCard = ({ pet }) => {
+  // Support both naming conventions for compatibility
+  const getName = () => pet.petName || pet.name || 'Unknown Pet';
+  const getImage = () => pet.petImage || pet.image || '/placeholder.jpg';
+  const getLocation = () => pet.petLocation || pet.location || 'Unknown Location';
+  const getCategory = () => pet.petCategory || pet.category || '';
+  const getAge = () => pet.petAge || pet.age || '';
+  const getGender = () => pet.petGender || pet.gender || '';
+  const getDescription = () => pet.shortDescription || pet.description || '';
+  const getAdopted = () => pet.adopted || false;
+  const getId = () => pet._id || pet.id || '';
+
   const getGenderIcon = (gender) => {
     return gender?.toLowerCase() === 'female' ? FaVenus : FaMars;
   };
@@ -24,9 +35,12 @@ const PetCard = ({ pet }) => {
       {/* Pet Image */}
       <div className="relative overflow-hidden">
         <img
-          src={pet.image}
-          alt={pet.name}
+          src={getImage()}
+          alt={getName()}
           className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-700"
+          onError={(e) => {
+            e.target.src = '/placeholder.jpg';
+          }}
         />
 
         {/* Status Badge */}
@@ -34,10 +48,10 @@ const PetCard = ({ pet }) => {
           <span
             className={`
               px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm
-              ${pet.adopted ? 'bg-success/80 text-success-content' : 'bg-primary/80 text-primary-content'}
+              ${getAdopted() ? 'bg-success/80 text-success-content' : 'bg-primary/80 text-primary-content'}
             `}
           >
-            {pet.adopted ? 'Adopted' : 'Available'}
+            {getAdopted() ? 'Adopted' : 'Available'}
           </span>
         </div>
 
@@ -50,47 +64,47 @@ const PetCard = ({ pet }) => {
       {/* Pet Info */}
       <div className="p-6">
         <h3 className="font-secondary font-bold text-xl mb-2 text-base-content group-hover:text-primary transition-colors">
-          {pet.name}
+          {getName()}
         </h3>
 
         <div className="space-y-2 mb-4">
           <div className="flex items-center gap-2 text-base-content/70">
             <FaMapMarkerAlt className="w-4 h-4 text-primary" />
-            <span className="text-sm">{pet.location}</span>
+            <span className="text-sm">{getLocation()}</span>
           </div>
 
-          {pet.breed && (
+          {getCategory() && (
             <div className="flex items-center gap-1">
               <FaPaw className="w-4 h-4 text-secondary" />
-              <span className="text-base-content/70">{pet.breed}</span>
+              <span className="text-base-content/70 capitalize">{getCategory()}</span>
             </div>
           )}
 
-          {pet.weight && (
+          {getAge() && (
             <div className="flex items-center gap-1">
-              <FaWeight className="w-4 h-4 text-secondary" />
-              <span className="text-base-content/70">{pet.weight} kg</span>
+              <FaInfoCircle className="w-4 h-4 text-secondary" />
+              <span className="text-base-content/70">{getAge()} years old</span>
             </div>
           )}
 
-          {pet.gender && (
+          {getGender() && (
             <div className="flex items-center gap-1">
-              {React.createElement(getGenderIcon(pet.gender), {
-                className: `w-4 h-4 ${getGenderColor(pet.gender)}`
+              {React.createElement(getGenderIcon(getGender()), {
+                className: `w-4 h-4 ${getGenderColor(getGender())}`
               })}
-              <span className="text-base-content/70">{pet.gender}</span>
+              <span className="text-base-content/70">{getGender()}</span>
             </div>
           )}
         </div>
 
         {/* Description */}
         <p className="text-base-content/70 text-sm mb-4 line-clamp-2">
-          {pet.description}
+          {getDescription()}
         </p>
 
         {/* Action Button */}
         <Link
-          to={`/pet/${pet._id}`}
+          to={`/pet/${getId()}`}
           className="w-full btn btn-primary btn-sm rounded-lg font-medium transition-all duration-300 hover:shadow-lg group"
         >
           <FaInfoCircle className="w-4 h-4 group-hover:rotate-12 transition-transform" />

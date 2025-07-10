@@ -35,6 +35,22 @@ const PetDetails = () => {
     enabled: !!id,
   });
 
+  // Helper functions to support both naming conventions
+  const getName = () => pet?.petName || pet?.name || 'Unknown Pet';
+  const getImage = () => pet?.petImage || pet?.image || '/placeholder.jpg';
+  const getLocation = () => pet?.petLocation || pet?.location || 'Unknown Location';
+  const getAge = () => {
+    const age = pet?.petAge || pet?.age;
+    return age ? `${age} years old` : 'Age unknown';
+  };
+  const getCategory = () => pet?.petCategory || pet?.category || 'Unknown';
+  const getGender = () => pet?.petGender || pet?.gender || '';
+  const getWeight = () => pet?.petWeight || pet?.weight || '';
+  const getBreed = () => pet?.petBreed || pet?.breed || '';
+  const getSize = () => pet?.petSize || pet?.size || '';
+  const getDescription = () => pet?.longDescription || pet?.shortDescription || pet?.description || '';
+  const getAdopted = () => pet?.adopted || false;
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 flex items-center justify-center">
@@ -108,18 +124,21 @@ const PetDetails = () => {
             <div className="bg-base-100/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-base-content/10 mb-6">
               <div className="relative">
                 <img
-                  src={pet.image}
-                  alt={pet.name}
+                  src={getImage()}
+                  alt={getName()}
                   className="w-full h-96 lg:h-[600px] object-cover"
+                  onError={(e) => {
+                    e.target.src = '/placeholder.jpg';
+                  }}
                 />
                 
                 {/* Status Badge */}
                 <div className="absolute top-4 left-4">
                   <span className={`
                     px-4 py-2 rounded-full text-sm font-medium backdrop-blur-sm
-                    ${pet.adopted ? 'bg-success/80 text-success-content' : 'bg-primary/80 text-primary-content'}
+                    ${getAdopted() ? 'bg-success/80 text-success-content' : 'bg-primary/80 text-primary-content'}
                   `}>
-                    {pet.adopted ? 'Adopted' : 'Available for Adoption'}
+                    {getAdopted() ? 'Adopted' : 'Available for Adoption'}
                   </span>
                 </div>
               </div>
@@ -128,11 +147,15 @@ const PetDetails = () => {
             {/* Description */}
             <div className="bg-base-100/50 backdrop-blur-sm rounded-2xl p-6 border border-base-content/10">
               <h3 className="font-secondary font-bold text-2xl mb-4 text-base-content">
-                About {pet.name}
+                About {getName()}
               </h3>
-              <p className="text-base-content/80 leading-relaxed">
-                {pet.description || `${pet.name} is a wonderful ${pet.category?.toLowerCase()} looking for a loving home. They are full of energy and love to play, making them a perfect companion for the right family.`}
-              </p>
+              <div className="text-base-content/80 leading-relaxed">
+                {getDescription() ? (
+                  <div dangerouslySetInnerHTML={{ __html: getDescription() }} />
+                ) : (
+                  <p>{getName()} is a wonderful {getCategory().toLowerCase()} looking for a loving home. They are full of energy and love to play, making them a perfect companion for the right family.</p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -143,48 +166,48 @@ const PetDetails = () => {
               <div className="flex items-center gap-2 mb-4">
                 <MdPets className="w-6 h-6 text-primary" />
                 <h2 className="font-secondary font-bold text-3xl text-base-content">
-                  {pet.name}
+                  {getName()}
                 </h2>
               </div>
               
               <div className="space-y-3">
                 <div className="flex items-center gap-3">
                   <FaMapMarkerAlt className="w-5 h-5 text-primary" />
-                  <span className="text-base-content/80">{pet.location}</span>
+                  <span className="text-base-content/80">{getLocation()}</span>
                 </div>
                 
                 <div className="flex items-center gap-3">
                   <FaBirthdayCake className="w-5 h-5 text-secondary" />
-                  <span className="text-base-content/80">{pet.age}</span>
+                  <span className="text-base-content/80">{getAge()}</span>
                 </div>
 
-                {pet.weight && (
+                {getWeight() && (
                   <div className="flex items-center gap-3">
                     <FaWeight className="w-5 h-5 text-accent" />
-                    <span className="text-base-content/80">{pet.weight}</span>
+                    <span className="text-base-content/80">{getWeight()}</span>
                   </div>
                 )}
 
-                {pet.gender && (
+                {getGender() && (
                   <div className="flex items-center gap-3">
-                    {React.createElement(getGenderIcon(pet.gender), { 
-                      className: `w-5 h-5 ${getGenderColor(pet.gender)}` 
+                    {React.createElement(getGenderIcon(getGender()), { 
+                      className: `w-5 h-5 ${getGenderColor(getGender())}` 
                     })}
-                    <span className="text-base-content/80">{pet.gender}</span>
+                    <span className="text-base-content/80">{getGender()}</span>
                   </div>
                 )}
 
-                {pet.breed && (
+                {getBreed() && (
                   <div className="flex items-center gap-3">
                     <MdPets className="w-5 h-5 text-info" />
-                    <span className="text-base-content/80">{pet.breed}</span>
+                    <span className="text-base-content/80">{getBreed()}</span>
                   </div>
                 )}
                 
-                {pet.size && (
+                {getSize() && (
                   <div className="flex items-center gap-3">
                     <FaRuler className="w-5 h-5 text-warning" />
-                    <span className="text-base-content/80">{pet.size}</span>
+                    <span className="text-base-content/80">{getSize()}</span>
                   </div>
                 )}
               </div>
