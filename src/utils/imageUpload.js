@@ -81,3 +81,6 @@ export const validateImageFile = (file) => {
 
     return { isValid: true };
 };
+
+// Alias export for backward compatibility
+export const imageUpload = uploadImageToImBB;

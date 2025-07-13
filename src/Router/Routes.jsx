@@ -15,6 +15,9 @@ import Profile from "../pages/Profile";
 import AddPet from "../pages/AddPet";
 import Petlist from "../pages/PetList/Petlist";
 import ProtectedRoute from "../components/ProtectedRoute";
+import CreateDonationCampaign from "../pages/CreateDonationCampaign";
+import MyDonationCampaigns from "../pages/MyDonationCampaigns";
+import EditDonationCampaign from "../pages/EditDonationCampaign";
 
 const route = createBrowserRouter([
     {
@@ -90,6 +93,30 @@ const route = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <Profile></Profile>
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "/dashboard/create-donation-campaign",
+                element: (
+                    <ProtectedRoute>
+                        <CreateDonationCampaign />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "/dashboard/my-donation-campaigns",
+                element: (
+                    <ProtectedRoute>
+                        <MyDonationCampaigns />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "/dashboard/edit-donation-campaign/:id",
+                element: (
+                    <ProtectedRoute>
+                        <EditDonationCampaign />
                     </ProtectedRoute>
                 )
             }

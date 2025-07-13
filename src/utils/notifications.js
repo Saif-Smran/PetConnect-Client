@@ -99,3 +99,9 @@ export const showConfirmation = (title, text, confirmButtonText = 'Yes, proceed!
 export const closeSwal = () => {
     Swal.close();
 };
+
+// Alias exports for backward compatibility
+export const showSuccessNotification = showSuccess;
+export const showErrorNotification = showError;
+export const showWarningNotification = showWarning;
+export const showInfoNotification = showInfo;

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import AdminDashboard from '../components/Admin/AdminDashboard';
 import AddPet from './AddPet';
 import MyAddedPets from './MyAddedPets';
+import CreateDonationCampaign from './CreateDonationCampaign';
+import MyDonationCampaigns from './MyDonationCampaigns';
 import DashboardLayout from '../Layout/DashboardLayout';
 import { 
     FaPlusCircle, 
@@ -25,11 +26,9 @@ import { HiSparkles } from 'react-icons/hi';
 
 const Dashboard = ({ defaultTab }) => {
     const { user } = useAuth();
-    const navigate = useNavigate();
     const [userRole, setUserRole] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeMenuItem, setActiveMenuItem] = useState(defaultTab || 'overview');
-    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     // Fetch user role from database
     useEffect(() => {
@@ -60,19 +59,8 @@ const Dashboard = ({ defaultTab }) => {
         fetchUserRole();
     }, [user]);
 
-    const menuItems = [
-        { id: 'overview', label: 'Overview', icon: FaHome },
-        { id: 'add-pet', label: 'Add a Pet', icon: FaPlusCircle },
-        { id: 'my-pets', label: 'My Added Pets', icon: FaPaw },
-        { id: 'adoption-requests', label: 'Adoption Request', icon: FaHeart },
-        { id: 'create-donation', label: 'Create Donation Campaign', icon: FaBullhorn },
-        { id: 'my-campaigns', label: 'My Donation Campaigns', icon: FaDonate },
-        { id: 'my-donations', label: 'My Donations', icon: FaHandHoldingHeart }
-    ];
-
     const handleMenuClick = (menuId) => {
         setActiveMenuItem(menuId);
-        setSidebarOpen(false); // Close sidebar on mobile after selection
     };
 
     if (loading) {
@@ -193,6 +181,10 @@ const Dashboard = ({ defaultTab }) => {
                 return <AddPet showEndpointInfo />;
             case 'my-pets':
                 return <MyAddedPets />;
+            case 'create-donation':
+                return <CreateDonationCampaign />;
+            case 'my-campaigns':
+                return <MyDonationCampaigns />;
             default:
                 return (
                     <div className="flex items-center justify-center min-h-[60vh]">

@@ -11,8 +11,8 @@ const menuItems = [
   { id: 'add-pet', label: 'Add a Pet', icon: FaPlusCircle, path: '/add-pet' },
   { id: 'my-pets', label: 'My Added Pets', icon: FaPaw, path: '/dashboard/my-pets' },
   { id: 'adoption-requests', label: 'Adoption Request', icon: FaHeart, path: '/dashboard/adoption-requests' },
-  { id: 'create-donation', label: 'Create Donation Campaign', icon: FaBullhorn, path: '/dashboard/create-donation' },
-  { id: 'my-campaigns', label: 'My Donation Campaigns', icon: FaDonate, path: '/dashboard/my-campaigns' },
+  { id: 'create-donation', label: 'Create Donation Campaign', icon: FaBullhorn, path: '/dashboard/create-donation-campaign' },
+  { id: 'my-campaigns', label: 'My Donation Campaigns', icon: FaDonate, path: '/dashboard/my-donation-campaigns' },
   { id: 'my-donations', label: 'My Donations', icon: FaHandHoldingHeart, path: '/dashboard/my-donations' }
 ];
 
