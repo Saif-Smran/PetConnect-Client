@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../hooks/useAuth';
 import axios from 'axios';
 import { 
   FaArrowLeft, 
@@ -20,6 +21,8 @@ import {
   FaSpinner
 } from 'react-icons/fa';
 import { MdPets } from 'react-icons/md';
+import AdoptionRequestForm from '../components/AdoptionRequestForm';
+import Swal from 'sweetalert2';
 
 const fetchPetDetails = async (petId) => {
   const response = await axios.get(`http://localhost:3000/pets/${petId}`);
@@ -28,6 +31,8 @@ const fetchPetDetails = async (petId) => {
 
 const PetDetails = () => {
   const { id } = useParams();
+  const { user } = useAuth();
+  const [showAdoptionForm, setShowAdoptionForm] = useState(false);
   
   const { data: pet, isLoading, error } = useQuery({
     queryKey: ['pet', id],
@@ -93,6 +98,40 @@ const PetDetails = () => {
 
   const getGenderColor = (gender) => {
     return gender?.toLowerCase() === 'female' ? 'text-pink-500' : 'text-blue-500';
+  };
+
+  const handleAdoptionRequest = () => {
+    if (!user) {
+      Swal.fire({
+        title: 'Login Required',
+        text: 'Please login to submit an adoption request.',
+        icon: 'warning',
+        confirmButtonColor: '#3B82F6',
+        confirmButtonText: 'Login'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Redirect to login page
+          window.location.href = '/login';
+        }
+      });
+      return;
+    }
+
+    if (getAdopted()) {
+      Swal.fire({
+        title: 'Pet Already Adopted',
+        text: 'This pet has already been adopted by another family.',
+        icon: 'info',
+        confirmButtonColor: '#10b981'
+      });
+      return;
+    }
+
+    setShowAdoptionForm(true);
+  };
+
+  const closeAdoptionForm = () => {
+    setShowAdoptionForm(false);
   };
 
   return (
@@ -261,14 +300,30 @@ const PetDetails = () => {
                 </div>
               </div>
               
-              <button className="w-full btn btn-primary btn-lg rounded-lg font-medium hover:shadow-lg transition-all duration-300">
+              <button 
+                onClick={handleAdoptionRequest}
+                disabled={getAdopted()}
+                className={`w-full btn btn-lg rounded-lg font-medium hover:shadow-lg transition-all duration-300 ${
+                  getAdopted() 
+                    ? 'btn-disabled bg-gray-300 text-gray-500 cursor-not-allowed' 
+                    : 'btn-primary'
+                }`}
+              >
                 <FaHeart className="mr-2" />
-                Adopt {pet.name}
+                {getAdopted() ? 'Already Adopted' : `Adopt ${getName()}`}
               </button>
             </div>
           </div>
         </div>
       </div>
+      
+      {/* Adoption Request Form Modal */}
+      {showAdoptionForm && (
+        <AdoptionRequestForm
+          pet={pet}
+          onClose={closeAdoptionForm}
+        />
+      )}
     </div>
   );
 };

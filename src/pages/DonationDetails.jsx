@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { FaHeart, FaBullseye, FaDonate, FaCalendarAlt, FaUser } from 'react-icons/fa';
 import { MdLocationOn } from 'react-icons/md';
@@ -15,6 +15,7 @@ const DonationDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleDonateClick = () => {
@@ -38,6 +39,13 @@ const DonationDetails = () => {
     setIsModalOpen(true);
   };
 
+  const handleDonationSuccess = () => {
+    // Invalidate and refetch the donation data
+    queryClient.invalidateQueries({ queryKey: ['donation', id] });
+    queryClient.invalidateQueries({ queryKey: ['donations'] });
+    queryClient.invalidateQueries({ queryKey: ['recommended-donations'] });
+  };
+
   const { data: donation, isLoading, error } = useQuery({
     queryKey: ['donation', id],
     queryFn: async () => {
@@ -51,17 +59,17 @@ const DonationDetails = () => {
   if (error) return <ErrorMessage message="Failed to load donation details" />;
   if (!donation) return <ErrorMessage message="Donation not found" />;
 
-  // Handle both old and new data formats
+  // Handle both old and new data formats (prioritize existing database fields)
   const title = donation.title || donation.petName || 'Untitled Campaign';
   const image = donation.image || donation.petImage || '/placeholder.jpg';
-  const target = donation.target || donation.maxDonation || 0;
-  const raised = donation.raised || donation.donatedAmount || 0;
+  const target = donation.target || donation.maxDonationAmount || donation.maxDonation || 0;
+  const raised = donation.raisedAmount || donation.raised || donation.donatedAmount || 0;
   const organizer = donation.organizer || 'Unknown';
   const location = donation.location || 'Unknown Location';
-  const deadline = donation.deadline || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+  const deadline = donation.deadline || donation.lastDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
   const status = donation.status || 'active';
   const category = donation.category || 'Pet Care';
-  const description = donation.description || 'Help this pet in need.';
+  const description = donation.description || donation.shortDescription || 'Help this pet in need.';
 
   const progressPercentage = target > 0 ? Math.min((raised / target) * 100, 100) : 0;
   const daysLeft = Math.max(0, Math.ceil((new Date(deadline) - new Date()) / (1000 * 60 * 60 * 24)));
@@ -261,6 +269,7 @@ const DonationDetails = () => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           donation={donation}
+          onSuccess={handleDonationSuccess}
         />
       </div>
     </div>

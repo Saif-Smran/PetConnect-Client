@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { FaTimes, FaDonate, FaCreditCard } from 'react-icons/fa';
 import Swal from 'sweetalert2';
@@ -13,8 +14,73 @@ const CheckoutForm = ({ donation, amount, onSuccess, onClose }) => {
   const stripe = useStripe();
   const elements = useElements();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
+
+  // Get current theme for dynamic styling
+  const [currentTheme, setCurrentTheme] = useState('light');
+
+  React.useEffect(() => {
+    // Get theme from document
+    const theme = document.documentElement.getAttribute('data-theme') || 'light';
+    setCurrentTheme(theme);
+
+    // Listen for theme changes
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
+          const newTheme = document.documentElement.getAttribute('data-theme') || 'light';
+          setCurrentTheme(newTheme);
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Dynamic styles based on theme
+  const getCardElementStyles = () => {
+    const isDark = currentTheme === 'dark';
+    
+    return {
+      base: {
+        fontSize: '16px',
+        color: isDark ? '#ffffff' : '#1f2937',
+        backgroundColor: isDark ? '#1f2937' : '#ffffff',
+        fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif',
+        fontSmoothing: 'antialiased',
+        lineHeight: '1.5',
+        iconColor: isDark ? '#9ca3af' : '#6b7280',
+        '::placeholder': {
+          color: isDark ? '#9ca3af' : '#6b7280',
+        },
+        ':focus': {
+          color: isDark ? '#ffffff' : '#1f2937',
+          backgroundColor: isDark ? '#1f2937' : '#ffffff',
+        },
+        ':hover': {
+          color: isDark ? '#ffffff' : '#1f2937',
+          backgroundColor: isDark ? '#1f2937' : '#ffffff',
+        },
+      },
+      invalid: {
+        color: '#ef4444',
+        iconColor: '#ef4444',
+        backgroundColor: isDark ? '#1f2937' : '#ffffff',
+      },
+      complete: {
+        color: '#10b981',
+        iconColor: '#10b981',
+        backgroundColor: isDark ? '#1f2937' : '#ffffff',
+      },
+    };
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -71,6 +137,14 @@ const CheckoutForm = ({ donation, amount, onSuccess, onClose }) => {
           confirmButtonColor: '#10B981'
         });
 
+        // Invalidate and refetch donation-related queries
+        await queryClient.invalidateQueries({ queryKey: ['donation', donation._id] });
+        await queryClient.invalidateQueries({ queryKey: ['donations'] });
+        await queryClient.invalidateQueries({ queryKey: ['recommended-donations'] });
+        
+        // Force refetch the specific donation
+        await queryClient.refetchQueries({ queryKey: ['donation', donation._id] });
+
         onSuccess();
         onClose();
       }
@@ -88,43 +162,38 @@ const CheckoutForm = ({ donation, amount, onSuccess, onClose }) => {
         <label className="label">
           <span className="label-text text-base font-medium">Card Details</span>
         </label>
-        <div className="card bg-base-100 border border-base-content/20 shadow-sm">
-          <div className="card-body p-4">
-            <CardElement
-              options={{
-                style: {
-                  base: {
-                    fontSize: '16px',
-                    color: '#374151',
-                    fontFamily: 'ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif',
-                    fontSmoothing: 'antialiased',
-                    lineHeight: '1.5',
-                    '::placeholder': {
-                      color: '#9CA3AF',
-                    },
-                    ':focus': {
-                      color: '#111827',
-                    },
-                  },
-                  invalid: {
-                    color: '#EF4444',
-                    iconColor: '#EF4444'
-                  },
-                  complete: {
-                    color: '#059669',
-                    iconColor: '#059669'
-                  },
-                },
-                hidePostalCode: true,
-              }}
-            />
+        <div className="form-control">
+          <div className="relative">
+            <div
+              className={`border-2 rounded-xl p-4 h-16 flex items-center transition-all duration-300 hover:border-primary focus-within:border-primary ${
+                currentTheme === 'dark' 
+                  ? 'bg-gray-800 border-gray-600' 
+                  : 'bg-white border-gray-200'
+              }`}
+            >
+              <div className="w-full">
+                <CardElement
+                  options={{
+                    style: getCardElementStyles(),
+                    hidePostalCode: true,
+                  }}
+                  className="w-full"
+                />
+              </div>
+            </div>
+            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+              <FaCreditCard className={`text-sm ${currentTheme === 'dark' ? 'text-white/40' : 'text-gray-400'}`} />
+            </div>
           </div>
+          <label className="label">
+            <span className="label-text-alt text-xs text-base-content/60">
+              Enter your card number, expiry date, and CVC
+            </span>
+            {/* <span className="label-text-alt text-xs text-base-content/40">
+              Test: 4242 4242 4242 4242
+            </span> */}
+          </label>
         </div>
-        <label className="label">
-          <span className="label-text-alt text-xs text-base-content/60">
-            Enter your card number, expiry date, and CVC
-          </span>
-        </label>
       </div>
 
       {error && (
@@ -159,7 +228,7 @@ const CheckoutForm = ({ donation, amount, onSuccess, onClose }) => {
   );
 };
 
-const DonationModal = ({ isOpen, onClose, donation }) => {
+const DonationModal = ({ isOpen, onClose, donation, onSuccess: onSuccessCallback }) => {
   const [amount, setAmount] = useState('');
   const [selectedPreset, setSelectedPreset] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -209,6 +278,10 @@ const DonationModal = ({ isOpen, onClose, donation }) => {
     setTimeout(() => {
       setShowSuccess(false);
       onClose();
+      // Call the callback to refresh parent data
+      if (onSuccessCallback) {
+        onSuccessCallback();
+      }
     }, 2000);
   };
 
@@ -222,8 +295,8 @@ const DonationModal = ({ isOpen, onClose, donation }) => {
   if (!isOpen) return null;
 
   return (
-    <div 
-      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300"
+    <div
+      className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300"
       onClick={(e) => {
         // Close modal when clicking on backdrop
         if (e.target === e.currentTarget) {
@@ -231,20 +304,20 @@ const DonationModal = ({ isOpen, onClose, donation }) => {
         }
       }}
     >
-      <div className="card bg-gradient-to-br from-base-100/95 to-base-200/95 backdrop-blur-xl shadow-2xl border border-base-content/10 w-full max-w-md max-h-[95vh] transform transition-all duration-500 scale-100 opacity-100 animate-in slide-in-from-bottom-4 flex flex-col">
+      <div className="bg-base-100 rounded-3xl shadow-2xl border border-base-content/10 w-full max-w-md max-h-[95vh] transform transition-all duration-500 scale-100 opacity-100 animate-in slide-in-from-bottom-4 flex flex-col overflow-hidden">
         {/* Header */}
-        <div className="card-body p-0 flex-shrink-0">
+        <div className="flex-shrink-0">
           <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 border-b border-base-content/10">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="avatar placeholder">
-                  <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full">
+                  <div className="w-12 h-12 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
                     <FaDonate className="text-white text-lg" />
                   </div>
                 </div>
                 <div>
-                  <h2 className="card-title text-xl">Make a Donation</h2>
-                  <p className="text-sm text-base-content/70">Support: {donation?.title}</p>
+                  <h2 className="text-xl font-bold text-base-content">Make a Donation</h2>
+                  <p className="text-sm text-base-content/70">Support: {donation?.petName || donation?.title}</p>
                 </div>
               </div>
               <button
@@ -255,113 +328,111 @@ const DonationModal = ({ isOpen, onClose, donation }) => {
               </button>
             </div>
           </div>
+        </div>
 
-          {/* Content */}
-          <div className="p-6 overflow-y-auto flex-1">
-            {!user ? (
-              <div className="text-center py-8">
-                <div className="avatar placeholder mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-r from-error/20 to-warning/20 rounded-full">
-                    <FaCreditCard className="text-3xl text-error" />
-                  </div>
+        {/* Content */}
+        <div className="p-6 overflow-y-auto flex-1">
+          {!user ? (
+            <div className="text-center py-8">
+              <div className="avatar placeholder mb-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-error/20 to-warning/20 rounded-full flex items-center justify-center">
+                  <FaCreditCard className="text-3xl text-error" />
                 </div>
-                <h3 className="text-lg font-semibold text-base-content mb-2">Login Required</h3>
-                <p className="text-base-content/70 mb-4">
-                  Please login to make a donation
-                </p>
-                <button
-                  onClick={handleClose}
-                  className="btn btn-primary gap-2 hover:scale-105 transition-transform duration-200"
-                >
-                  <FaTimes />
-                  Close
-                </button>
               </div>
-            ) : showSuccess ? (
-              <div className="text-center py-8">
-                <div className="avatar placeholder mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-r from-success/20 to-primary/20 rounded-full animate-pulse">
-                    <FaDonate className="text-2xl text-success" />
-                  </div>
+              <h3 className="text-lg font-semibold text-base-content mb-2">Login Required</h3>
+              <p className="text-base-content/70 mb-4">
+                Please login to make a donation
+              </p>
+              <button
+                onClick={handleClose}
+                className="btn btn-primary gap-2 hover:scale-105 transition-transform duration-200"
+              >
+                <FaTimes />
+                Close
+              </button>
+            </div>
+          ) : showSuccess ? (
+            <div className="text-center py-8">
+              <div className="avatar placeholder mb-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-success/20 to-primary/20 rounded-full animate-pulse flex items-center justify-center">
+                  <FaDonate className="text-2xl text-success" />
                 </div>
-                <h3 className="text-lg font-semibold text-base-content mb-2">Thank You!</h3>
-                <p className="text-base-content/70">Your donation has been processed successfully.</p>
               </div>
-            ) : (
-              <Elements stripe={stripePromise}>
-                <div className="space-y-6">
-                  {/* Amount Selection */}
+              <h3 className="text-lg font-semibold text-base-content mb-2">Thank You!</h3>
+              <p className="text-base-content/70">Your donation has been processed successfully.</p>
+            </div>
+          ) : (
+            <Elements stripe={stripePromise}>
+              <div className="space-y-6">
+                {/* Amount Selection */}
+                <div>
+                  <label className="label">
+                    <span className="label-text text-base font-medium">Choose Donation Amount</span>
+                  </label>
+
+                  {/* Preset Amounts */}
+                  <div className="grid grid-cols-3 gap-3 mb-4">
+                    {presetAmounts.map((preset) => (
+                      <button
+                        key={preset}
+                        type="button"
+                        onClick={() => handlePresetClick(preset)}
+                        className={`btn btn-outline transition-all duration-300 hover:scale-105 ${selectedPreset === preset
+                          ? 'btn-primary shadow-lg'
+                          : 'hover:btn-primary'
+                          }`}
+                      >
+                        ${preset}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Custom Amount */}
                   <div>
                     <label className="label">
-                      <span className="label-text text-base font-medium">Choose Donation Amount</span>
+                      <span className="label-text text-sm">Or enter custom amount</span>
                     </label>
-                    
-                    {/* Preset Amounts */}
-                    <div className="grid grid-cols-3 gap-3 mb-4">
-                      {presetAmounts.map((preset) => (
-                        <button
-                          key={preset}
-                          type="button"
-                          onClick={() => handlePresetClick(preset)}
-                          className={`btn btn-outline transition-all duration-300 hover:scale-105 ${
-                            selectedPreset === preset
-                              ? 'btn-primary shadow-lg'
-                              : 'hover:btn-primary'
-                          }`}
-                        >
-                          ${preset}
-                        </button>
-                      ))}
-                    </div>
+                    <label className="input-group">
+                      <span className="bg-base-200">$</span>
+                      <input
+                        type="text"
+                        value={amount}
+                        onChange={handleCustomAmountChange}
+                        placeholder="Enter amount"
+                        className="input input-bordered flex-1 focus:input-primary transition-all duration-300"
+                      />
+                    </label>
+                  </div>
+                </div>
 
-                    {/* Custom Amount */}
-                    <div>
-                      <label className="label">
-                        <span className="label-text text-sm">Or enter custom amount</span>
-                      </label>
-                      <label className="input-group">
-                        <span className="bg-base-200">$</span>
-                        <input
-                          type="text"
-                          value={amount}
-                          onChange={handleCustomAmountChange}
-                          placeholder="Enter amount"
-                          className="input input-bordered flex-1 focus:input-primary transition-all duration-300"
-                        />
-                      </label>
+                {/* Payment Form */}
+                {amount && parseInt(amount) > 0 && (
+                  <div className="divider">Payment Details</div>
+                )}
+
+                {amount && parseInt(amount) > 0 && (
+                  <div className="card bg-gradient-to-r from-primary/5 to-secondary/5 border border-base-content/10 rounded-2xl">
+                    <div className="card-body p-4">
+                      <div className="flex items-center gap-2 mb-4">
+                        <div className="avatar placeholder">
+                          <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-full flex items-center justify-center">
+                            <FaCreditCard className="text-white text-sm" />
+                          </div>
+                        </div>
+                        <h3 className="font-semibold text-base-content">Payment Details</h3>
+                      </div>
+                      <CheckoutForm
+                        donation={donation}
+                        amount={parseInt(amount)}
+                        onSuccess={handleSuccess}
+                        onClose={handleClose}
+                      />
                     </div>
                   </div>
-
-                  {/* Payment Form */}
-                  {amount && parseInt(amount) > 0 && (
-                    <div className="divider">Payment Details</div>
-                  )}
-                  
-                  {amount && parseInt(amount) > 0 && (
-                    <div className="card bg-gradient-to-r from-primary/5 to-secondary/5 border border-base-content/10">
-                      <div className="card-body p-4">
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="avatar placeholder">
-                            <div className="w-8 h-8 bg-gradient-to-r from-primary to-secondary rounded-full">
-                              <FaCreditCard className="text-white text-sm" />
-                            </div>
-                          </div>
-                          <h3 className="font-semibold text-base-content">Payment Details</h3>
-                        </div>
-                        <CheckoutForm
-                          donation={donation}
-                          amount={parseInt(amount)}
-                          onSuccess={handleSuccess}
-                          onClose={handleClose}
-                          className= 'text-base-content/70'
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </Elements>
-            )}
-          </div>
+                )}
+              </div>
+            </Elements>
+          )}
         </div>
       </div>
     </div>

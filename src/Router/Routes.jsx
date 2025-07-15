@@ -18,6 +18,8 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import CreateDonationCampaign from "../pages/CreateDonationCampaign";
 import MyDonationCampaigns from "../pages/MyDonationCampaigns";
 import EditDonationCampaign from "../pages/EditDonationCampaign";
+import MyDonations from "../pages/MyDonations";
+import AdoptionRequests from "../pages/AdoptionRequests";
 
 const route = createBrowserRouter([
     {
@@ -117,6 +119,22 @@ const route = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <EditDonationCampaign />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "/dashboard/my-donations",
+                element: (
+                    <ProtectedRoute>
+                        <MyDonations />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: "/dashboard/adoption-requests",
+                element: (
+                    <ProtectedRoute>
+                        <AdoptionRequests />
                     </ProtectedRoute>
                 )
             }

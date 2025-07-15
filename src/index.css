@@ -411,3 +411,154 @@ This configuration is applied via tailwind.config.js
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(45deg, #24917B, #1e7a68);
 }
+
+/* Stripe Elements Styling - Force visibility */
+.StripeElement {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+  color: inherit !important;
+}
+
+.StripeElement:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.StripeElement--invalid {
+  color: #ef4444 !important;
+}
+
+.StripeElement--complete {
+  color: #10b981 !important;
+}
+
+/* Force all Stripe element text to be visible */
+.StripeElement,
+.StripeElement *,
+.__PrivateStripeElement,
+.__PrivateStripeElement *,
+.StripeElement input,
+.__PrivateStripeElement input,
+.StripeElement span,
+.__PrivateStripeElement span {
+  color: inherit !important;
+  background: transparent !important;
+  font-size: 16px !important;
+  font-family: inherit !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Target the iframe body directly for dark theme */
+[data-theme="dark"] .StripeElement,
+[data-theme="dark"] .__PrivateStripeElement {
+  background: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .StripeElement *,
+[data-theme="dark"] .__PrivateStripeElement * {
+  background: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .StripeElement iframe,
+[data-theme="dark"] .__PrivateStripeElement iframe {
+  background: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+/* Light theme fallback */
+[data-theme="light"] .StripeElement,
+[data-theme="light"] .__PrivateStripeElement {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+[data-theme="light"] .StripeElement *,
+[data-theme="light"] .__PrivateStripeElement * {
+  background: #ffffff !important;
+  color: #000000 !important;
+}
+
+/* Placeholder styles */
+.StripeElement input::placeholder,
+.__PrivateStripeElement input::placeholder {
+  color: #6b7280 !important;
+  opacity: 0.7 !important;
+}
+
+/* Dark theme placeholder */
+[data-theme="dark"] .StripeElement input::placeholder,
+[data-theme="dark"] .__PrivateStripeElement input::placeholder {
+  color: #9ca3af !important;
+  opacity: 0.7 !important;
+}
+
+/* Ensure icons are visible */
+.StripeElement svg,
+.__PrivateStripeElement svg {
+  fill: currentColor !important;
+  color: inherit !important;
+}
+
+/* Stripe Elements Dark Mode Styling */
+[data-theme="dark"] .StripeElement {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .StripeElement--focus {
+  background-color: #1f2937 !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .StripeElement--complete {
+  background-color: #1f2937 !important;
+  color: #10b981 !important;
+}
+
+[data-theme="dark"] .StripeElement--invalid {
+  background-color: #1f2937 !important;
+  color: #ef4444 !important;
+}
+
+/* Force Stripe iframe to inherit dark background */
+[data-theme="dark"] .__PrivateStripeElement iframe {
+  background-color: #1f2937 !important;
+}
+
+/* Light mode styling for consistency */
+[data-theme="light"] .StripeElement {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+[data-theme="light"] .StripeElement--focus {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+[data-theme="light"] .StripeElement--complete {
+  background-color: #ffffff !important;
+  color: #10b981 !important;
+}
+
+[data-theme="light"] .StripeElement--invalid {
+  background-color: #ffffff !important;
+  color: #ef4444 !important;
+}
+
+/* Additional styling for better integration */
+.bg-gray-800 .StripeElement {
+  background-color: #1f2937 !important;
+}
+
+.bg-white .StripeElement {
+  background-color: #ffffff !important;
+}
