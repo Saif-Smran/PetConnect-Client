@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { FaTimes, FaDonate, FaCreditCard } from 'react-icons/fa';
 import Swal from 'sweetalert2';
@@ -14,7 +13,6 @@ const CheckoutForm = ({ donation, amount, onSuccess, onClose }) => {
   const stripe = useStripe();
   const elements = useElements();
   const { user } = useAuth();
-  const queryClient = useQueryClient();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState(null);
 
@@ -136,14 +134,6 @@ const CheckoutForm = ({ donation, amount, onSuccess, onClose }) => {
           text: `Thank you for your generous donation of $${amount}`,
           confirmButtonColor: '#10B981'
         });
-
-        // Invalidate and refetch donation-related queries
-        await queryClient.invalidateQueries({ queryKey: ['donation', donation._id] });
-        await queryClient.invalidateQueries({ queryKey: ['donations'] });
-        await queryClient.invalidateQueries({ queryKey: ['recommended-donations'] });
-        
-        // Force refetch the specific donation
-        await queryClient.refetchQueries({ queryKey: ['donation', donation._id] });
 
         onSuccess();
         onClose();

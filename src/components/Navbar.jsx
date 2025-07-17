@@ -14,7 +14,6 @@ import {
     HiX,
     HiLogout,
     HiUser,
-    HiCog,
     HiViewGrid
 } from 'react-icons/hi';
 import { 
@@ -22,7 +21,6 @@ import {
     MdVolunteerActivism,
     MdDashboard,
     MdPerson,
-    MdSettings,
     MdLogout 
 } from 'react-icons/md';
 import { FiLogIn, FiUserPlus } from 'react-icons/fi';
@@ -41,8 +39,10 @@ const Navbar = () => {
         const fetchUserRole = async () => {
             if (user?.uid) {
                 try {
-                    const token = localStorage.getItem('access_token');
-                    const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/profile`, {
+                    const token = localStorage.getItem('firebase_id_token');
+                    if (!token) return;
+
+                    const response = await fetch(`${import.meta.env.VITE_API_URL}/user-profile`, {
                         headers: {
                             'Authorization': `Bearer ${token}`
                         }
@@ -51,6 +51,7 @@ const Navbar = () => {
                     if (response.ok) {
                         const userData = await response.json();
                         setUserRole(userData.role);
+                        console.log('User role loaded in navbar:', userData.role);
                     }
                 } catch (error) {
                     console.error('Error fetching user role:', error);
@@ -113,7 +114,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-base-100/80 backdrop-blur-lg border-b border-base-300/50 sticky top-0 z-50 shadow-lg">
+        <nav className="bg-base-100/80 backdrop-blur-lg border-b border-base-300/50 sticky top-0 z-100 shadow-lg">
             <div className="max-w-11/12 mx-auto px-4 py-3">
                 <div className="flex items-center justify-between">
                     {/* Logo Section */}
@@ -193,7 +194,7 @@ const Navbar = () => {
                                             {user.displayName || 'User'}
                                         </p>
                                         <p className="font-primary text-xs opacity-70">
-                                            {userRole === 'admin' ? '👑 Admin' : '👤 User'}
+                                            {userRole === 'admin' ? '👑 Admin' : userRole === 'moderator' ? '🛡️ Moderator' : '👤 User'}
                                         </p>
                                     </div>
                                     <HiChevronDown className={`w-4 h-4 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
@@ -219,10 +220,12 @@ const Navbar = () => {
                                                     {userRole && (
                                                         <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full mt-1 ${
                                                             userRole === 'admin' 
-                                                                ? 'bg-green-100 text-green-800'
-                                                                : 'bg-blue-100 text-blue-800'
+                                                                ? 'bg-yellow-100 text-yellow-800'
+                                                                : userRole === 'moderator'
+                                                                ? 'bg-blue-100 text-blue-800'
+                                                                : 'bg-gray-100 text-gray-800'
                                                         }`}>
-                                                            {userRole === 'admin' ? '👑 Admin' : '👤 User'}
+                                                            {userRole === 'admin' ? '👑 Admin' : userRole === 'moderator' ? '🛡️ Moderator' : '👤 User'}
                                                         </span>
                                                     )}
                                                 </div>
@@ -247,16 +250,6 @@ const Navbar = () => {
                                             <HiUser className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
                                             <span className="font-primary font-medium">Profile</span>
                                             <span className="ml-auto text-xs opacity-50">⌘P</span>
-                                        </Link>
-                                        
-                                        <Link
-                                            to="/settings"
-                                            className="flex items-center space-x-3 px-4 py-3 hover:bg-primary/10 transition-colors duration-200 group"
-                                            onClick={() => setIsDropdownOpen(false)}
-                                        >
-                                            <HiCog className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
-                                            <span className="font-primary font-medium">Settings</span>
-                                            <span className="ml-auto text-xs opacity-50">⌘S</span>
                                         </Link>
                                         
                                         <div className="border-t border-base-300/50 mt-2 pt-2">
@@ -328,6 +321,48 @@ const Navbar = () => {
                                     </Link>
                                 );
                             })}
+                            
+                            {user && (
+                                <div className="flex flex-col space-y-2 pt-4 border-t border-base-300/50 mt-4">
+                                    <div className="flex items-center space-x-3 px-4 py-3 bg-primary/5 rounded-xl">
+                                        <img
+                                            src={user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.displayName || user.email)}&background=3B82F6&color=ffffff&size=40&rounded=true`}
+                                            alt={user.displayName || 'User'}
+                                            className="h-10 w-10 rounded-full object-cover border-2 border-primary/30"
+                                        />
+                                        <div className="flex-1">
+                                            <p className="font-secondary font-semibold text-sm">
+                                                {user.displayName || 'User'}
+                                            </p>
+                                            <p className="font-primary text-xs opacity-70">
+                                                {userRole === 'admin' ? '👑 Admin' : userRole === 'moderator' ? '🛡️ Moderator' : '👤 User'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
+                                        <button className="btn-pet btn-pet-outline w-full justify-center flex items-center cursor-pointer space-x-2">
+                                            <MdDashboard className="w-4 h-4" />
+                                            <span>Dashboard</span>
+                                        </button>
+                                    </Link>
+                                    
+                                    <Link to="/profile" onClick={() => setIsMobileMenuOpen(false)}>
+                                        <button className="btn-pet btn-pet-outline w-full justify-center flex items-center cursor-pointer space-x-2">
+                                            <MdPerson className="w-4 h-4" />
+                                            <span>Profile</span>
+                                        </button>
+                                    </Link>
+                                    
+                                    <button 
+                                        onClick={handleLogout}
+                                        className="btn-pet btn-pet-primary w-full justify-center flex items-center space-x-2"
+                                    >
+                                        <MdLogout className="w-4 h-4" />
+                                        <span>Logout</span>
+                                    </button>
+                                </div>
+                            )}
                             
                             {!user && (
                                 <div className="flex flex-col space-y-2 pt-4 border-t border-base-300/50 mt-4">

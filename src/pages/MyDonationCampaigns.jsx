@@ -183,7 +183,7 @@ const MyDonationCampaigns = () => {
                             <table className="table table-lg">
                                 <thead className="bg-base-200">
                                     <tr>
-                                        <th className="text-base font-semibold">Pet Details</th>
+                                        <th className="text-base font-semibold">Campaign Details</th>
                                         <th className="text-base font-semibold">Progress</th>
                                         <th className="text-base font-semibold">Status</th>
                                         <th className="text-base font-semibold">End Date</th>
@@ -198,14 +198,14 @@ const MyDonationCampaigns = () => {
                                                     <div className="avatar">
                                                         <div className="mask mask-squircle w-16 h-16">
                                                             <img
-                                                                src={campaign.petImage || '/placeholder.jpg'}
-                                                                alt={campaign.petName}
+                                                                src={campaign.image || campaign.petImage || '/placeholder.jpg'}
+                                                                alt={campaign.title || campaign.petName || 'Campaign'}
                                                                 className="object-cover"
                                                             />
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <div className="font-bold text-lg">{campaign.petName}</div>
+                                                        <div className="font-bold text-lg">{campaign.title || campaign.petName || 'Untitled Campaign'}</div>
                                                         <div className="text-sm text-base-content/70">
                                                             {campaign.shortDescription.substring(0, 50)}...
                                                         </div>

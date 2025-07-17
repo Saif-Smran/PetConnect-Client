@@ -13,9 +13,9 @@ import Swal from 'sweetalert2';
 // Validation schema
 const validationSchema = Yup.object({
   petName: Yup.string()
-    .min(2, 'Pet name must be at least 2 characters')
-    .max(50, 'Pet name must be less than 50 characters')
-    .required('Pet name is required'),
+    .min(2, 'Campaign title must be at least 2 characters')
+    .max(50, 'Campaign title must be less than 50 characters')
+    .required('Campaign title is required'),
   maxDonationAmount: Yup.number()
     .min(1, 'Maximum donation amount must be at least $1')
     .max(100000, 'Maximum donation amount must be less than $100,000')
@@ -352,18 +352,18 @@ const EditDonationCampaign = ({ showEndpointInfo = false }) => {
 
                                     {/* Pet Details Grid */}
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        {/* Pet Name */}
+                                        {/* Campaign Title */}
                                         <div>
                                             <label className="label">
                                                 <span className="label-text font-medium flex items-center gap-2">
                                                     <MdPets className="text-secondary" />
-                                                    Pet Name *
+                                                    Campaign Title *
                                                 </span>
                                             </label>
                                             <Field
                                                 name="petName"
                                                 type="text"
-                                                placeholder="Enter pet's name"
+                                                placeholder="Enter campaign title"
                                                 className={`input input-bordered w-full focus:input-primary transition-all duration-300 ${
                                                     errors.petName && touched.petName ? 'input-error' : ''
                                                 }`}

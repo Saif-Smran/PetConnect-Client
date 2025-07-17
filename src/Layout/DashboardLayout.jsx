@@ -116,7 +116,6 @@ const DashboardLayout = ({ children, activeMenuId }) => {
                       <span className="badge">New</span>
                     </a>
                   </li>
-                  <li><a><FaCog className="w-4 h-4" /> Settings</a></li>
                   <li><a><FaSignOutAlt className="w-4 h-4" /> Logout</a></li>
                 </ul>
               </div>

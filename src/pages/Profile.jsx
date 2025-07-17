@@ -1,17 +1,107 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { FaUser, FaEnvelope, FaCalendar, FaEdit, FaSave, FaTimes, FaCamera } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaCalendar, FaEdit, FaSave, FaTimes, FaCamera, FaPaw, FaHeart, FaHandsHelping, FaSync, FaCrown, FaUserShield } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import { uploadImageToImBB } from '../utils/imageUpload';
 
 const Profile = () => {
   const { user, updateUserProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const [userStats, setUserStats] = useState({
+    donationsMade: 0,
+    petsViewed: 0,
+    campaignsSupported: 0
+  });
   const [formData, setFormData] = useState({
     displayName: user?.displayName || '',
     email: user?.email || '',
     photoURL: user?.photoURL || ''
   });
+
+  // Load user profile
+  const loadUserProfile = async () => {
+    try {
+      const token = localStorage.getItem('firebase_id_token');
+      if (!token) {
+        console.log('No token found, skipping profile load');
+        return;
+      }
+
+      console.log('Making request to:', `${import.meta.env.VITE_API_URL}/user-profile`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/user-profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const profile = await response.json();
+        console.log('Profile received:', profile);
+        setUserProfile(profile);
+      } else {
+        console.log('Profile response not ok:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error loading user profile:', error);
+    }
+  };
+
+  // Load user stats
+  const loadUserStats = async () => {
+    try {
+      const token = localStorage.getItem('firebase_id_token');
+      console.log('Token found:', !!token);
+      
+      if (!token) {
+        console.log('No token found, skipping stats load');
+        return;
+      }
+
+      console.log('Making request to:', `${import.meta.env.VITE_API_URL}/user-stats`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/user-stats`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      console.log('Response status:', response.status);
+      
+      if (response.ok) {
+        const stats = await response.json();
+        console.log('Stats received:', stats);
+        setUserStats({
+          donationsMade: stats.recentDonations || 0,
+          petsViewed: stats.myPetsCount || 0,
+          campaignsSupported: stats.myCampaignsCount || 0
+        });
+      } else {
+        console.log('Response not ok:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error loading user stats:', error);
+    }
+  };
+
+  useEffect(() => {
+    loadUserProfile();
+    loadUserStats();
+  }, []);
+
+  const handleRefreshStats = () => {
+    loadUserProfile();
+    loadUserStats();
+    Swal.fire({
+      title: 'Profile & Stats Refreshed!',
+      text: 'Your profile and account stats have been updated',
+      icon: 'success',
+      timer: 1500,
+      showConfirmButton: false,
+      toast: true,
+      position: 'top-end'
+    });
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -50,22 +140,8 @@ const Profile = () => {
     try {
       setIsLoading(true);
       
-      // Create FormData for image upload
-      const imageFormData = new FormData();
-      imageFormData.append('image', file);
-
-      // Upload to your image service (replace with your actual endpoint)
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/upload/image`, {
-        method: 'POST',
-        body: imageFormData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Image upload failed');
-      }
-
-      const data = await response.json();
-      const imageUrl = data.imageUrl;
+      // Upload image to ImBB
+      const imageUrl = await uploadImageToImBB(file);
 
       // Update form data with new image URL
       setFormData(prev => ({
@@ -190,13 +266,35 @@ const Profile = () => {
 
               {/* Profile Info */}
               <div className="flex-1 text-center md:text-left">
-                <h2 className="text-3xl font-bold text-base-content mb-2">
-                  {user?.displayName || 'User'}
-                </h2>
+                <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+                  <h2 className="text-3xl font-bold text-base-content">
+                    {user?.displayName || userProfile?.displayName || 'User'}
+                  </h2>
+                  {userProfile?.role === 'admin' && (
+                    <div className="badge badge-warning gap-1">
+                      <FaCrown className="w-3 h-3" />
+                      Admin
+                    </div>
+                  )}
+                  {userProfile?.role === 'moderator' && (
+                    <div className="badge badge-info gap-1">
+                      <FaUserShield className="w-3 h-3" />
+                      Moderator
+                    </div>
+                  )}
+                </div>
                 <p className="text-base-content/70 mb-4">{user?.email}</p>
-                <div className="flex items-center justify-center md:justify-start gap-2 text-sm text-base-content/60">
-                  <FaCalendar className="w-4 h-4" />
-                  <span>Member since {new Date(user?.metadata?.creationTime).toLocaleDateString()}</span>
+                <div className="flex flex-col gap-2 text-sm text-base-content/60">
+                  <div className="flex items-center justify-center md:justify-start gap-2">
+                    <FaCalendar className="w-4 h-4" />
+                    <span>Member since {userProfile?.memberSince ? new Date(userProfile.memberSince).toLocaleDateString() : new Date(user?.metadata?.creationTime).toLocaleDateString()}</span>
+                  </div>
+                  {userProfile?.provider && (
+                    <div className="flex items-center justify-center md:justify-start gap-2">
+                      <FaUser className="w-4 h-4" />
+                      <span>Account type: {userProfile.provider === 'google.com' ? 'Google' : userProfile.provider === 'github.com' ? 'GitHub' : 'Email'}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -280,27 +378,78 @@ const Profile = () => {
                 </label>
                 <div className="flex items-center gap-3 p-3 bg-base-200/50 rounded-lg">
                   <FaEnvelope className="text-base-content/50" />
-                  <span className="text-base-content">{formData.email}</span>
-                  <span className="badge badge-outline badge-sm">Verified</span>
+                  <span className="text-base-content flex-1">{formData.email}</span>
+                  <div className="flex gap-2">
+                    <span className="badge badge-outline badge-sm">Verified</span>
+                    {userProfile?.role && (
+                      <span className={`badge badge-sm ${userProfile.role === 'admin' ? 'badge-warning' : userProfile.role === 'moderator' ? 'badge-info' : 'badge-ghost'}`}>
+                        {userProfile.role}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
+
+              {/* Additional Profile Info */}
+              {userProfile && (
+                <div className="md:col-span-2">
+                  <label className="label">
+                    <span className="label-text font-medium">Account Information</span>
+                  </label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="flex items-center gap-3 p-3 bg-base-200/50 rounded-lg">
+                      <FaUser className="text-base-content/50" />
+                      <div>
+                        <div className="text-sm text-base-content/70">User ID</div>
+                        <div className="text-base-content font-mono text-sm">{userProfile.uid}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-base-200/50 rounded-lg">
+                      <FaCalendar className="text-base-content/50" />
+                      <div>
+                        <div className="text-sm text-base-content/70">Account Created</div>
+                        <div className="text-base-content">{new Date(userProfile.createdAt).toLocaleDateString()}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Account Stats */}
             <div className="mt-8 pt-8 border-t border-base-content/10">
-              <h3 className="text-xl font-bold text-base-content mb-6">Account Activity</h3>
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-bold text-base-content">Account Activity</h3>
+                <button 
+                  onClick={handleRefreshStats}
+                  className="btn btn-ghost btn-sm gap-2"
+                  title="Refresh Stats"
+                >
+                  <FaSync className="w-4 h-4" />
+                  Refresh
+                </button>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="text-center p-4 bg-gradient-to-br from-primary/10 to-primary/5 rounded-2xl">
-                  <div className="text-2xl font-bold text-primary mb-1">0</div>
+                  <div className="text-2xl font-bold text-primary mb-1 flex items-center justify-center gap-2">
+                    <FaHeart className="text-xl" />
+                    {userStats.donationsMade}
+                  </div>
                   <div className="text-sm text-base-content/70">Donations Made</div>
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-secondary/10 to-secondary/5 rounded-2xl">
-                  <div className="text-2xl font-bold text-secondary mb-1">0</div>
-                  <div className="text-sm text-base-content/70">Pets Viewed</div>
+                  <div className="text-2xl font-bold text-secondary mb-1 flex items-center justify-center gap-2">
+                    <FaPaw className="text-xl" />
+                    {userStats.petsViewed}
+                  </div>
+                  <div className="text-sm text-base-content/70">Pets Added</div>
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-accent/10 to-accent/5 rounded-2xl">
-                  <div className="text-2xl font-bold text-accent mb-1">0</div>
-                  <div className="text-sm text-base-content/70">Campaigns Supported</div>
+                  <div className="text-2xl font-bold text-accent mb-1 flex items-center justify-center gap-2">
+                    <FaHandsHelping className="text-xl" />
+                    {userStats.campaignsSupported}
+                  </div>
+                  <div className="text-sm text-base-content/70">Campaigns Created</div>
                 </div>
               </div>
             </div>

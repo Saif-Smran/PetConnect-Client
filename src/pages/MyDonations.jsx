@@ -16,7 +16,7 @@ const MyDonations = () => {
         try {
             setLoading(true);
             const token = await user.getIdToken();
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/my-donations`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/my-donations`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -47,7 +47,7 @@ const MyDonations = () => {
         }
     }, [user, fetchMyDonations]);
 
-    const handleRefund = async (donationId, petName, amount) => {
+    const handleRefund = async (donationId, campaignTitle, amount) => {
         const result = await Swal.fire({
             title: 'Request Refund?',
             html: `
@@ -55,7 +55,7 @@ const MyDonations = () => {
                     <div class="text-4xl mb-4">💰</div>
                     <p class="text-lg mb-2">Are you sure you want to request a refund for your donation?</p>
                     <div class="bg-base-200 rounded-lg p-4 mt-4">
-                        <p><strong>Pet:</strong> ${petName}</p>
+                        <p><strong>Campaign:</strong> ${campaignTitle}</p>
                         <p><strong>Amount:</strong> $${amount}</p>
                     </div>
                     <p class="text-sm text-gray-600 mt-4">This action cannot be undone.</p>
@@ -73,7 +73,7 @@ const MyDonations = () => {
             try {
                 setRefundingId(donationId);
                 const token = await user.getIdToken();
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/my-donations/${donationId}/refund`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/my-donations/${donationId}/refund`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -209,7 +209,7 @@ const MyDonations = () => {
                                             <td className="py-4 text-center">
                                                 <div className="flex justify-center gap-2">
                                                     <button
-                                                        onClick={() => handleRefund(donation._id, donation.campaign?.petName, donation.amount)}
+                                                        onClick={() => handleRefund(donation._id, donation.campaign?.title || donation.campaign?.petName || 'Unknown Campaign', donation.amount)}
                                                         disabled={refundingId === donation._id || donation.campaign?.status !== 'active'}
                                                         className={`btn btn-sm ${
                                                             donation.campaign?.status === 'active' 
