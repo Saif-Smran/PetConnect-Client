@@ -41,7 +41,7 @@ const DonationDetails = () => {
   const { data: donation, isLoading, error } = useQuery({
     queryKey: ['donation', id],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:3000/donations/${id}`);
+      const response = await axios.get(`https://pet-connect-server-one.vercel.app/donations/${id}`);
       return response.data;
     },
     enabled: !!id

@@ -25,7 +25,7 @@ import AdoptionRequestForm from '../components/AdoptionRequestForm';
 import Swal from 'sweetalert2';
 
 const fetchPetDetails = async (petId) => {
-  const response = await axios.get(`http://localhost:3000/pets/${petId}`);
+  const response = await axios.get(`https://pet-connect-server-one.vercel.app/pets/${petId}`);
   return response.data;
 };
 

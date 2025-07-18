@@ -95,7 +95,7 @@ const CheckoutForm = ({ donation, amount, onSuccess, onClose }) => {
 
     try {
       // Create payment intent
-      const { data } = await axios.post('http://localhost:3000/create-payment-intent', {
+      const { data } = await axios.post('https://pet-connect-server-one.vercel.app/create-payment-intent', {
         amount: amount * 100, // Convert to cents
         donationId: donation._id,
         donorEmail: user.email,
@@ -120,7 +120,7 @@ const CheckoutForm = ({ donation, amount, onSuccess, onClose }) => {
         setError(stripeError.message);
       } else if (paymentIntent.status === 'succeeded') {
         // Payment successful, save donation record
-        await axios.post('http://localhost:3000/donations/record', {
+        await axios.post('https://pet-connect-server-one.vercel.app/donations/record', {
           donationId: donation._id,
           amount: amount,
           donorEmail: user.email,

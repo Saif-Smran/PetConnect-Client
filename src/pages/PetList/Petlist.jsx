@@ -22,7 +22,7 @@ const fetchPets = async ({ pageParam = 0, queryKey }) => {
     params.category = category;
   }
 
-  const response = await axios.get('http://localhost:3000/pets', { params });
+  const response = await axios.get('https://pet-connect-server-one.vercel.app/pets', { params });
   let filtered = response.data;
 
   // Local filtering by search term

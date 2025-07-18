@@ -15,6 +15,20 @@ import Profile from "../pages/Profile";
 import AddPet from "../pages/AddPet";
 import Petlist from "../pages/PetList/Petlist";
 import ProtectedRoute from "../components/ProtectedRoute";
+import UserRoute from "../components/UserRoute";
+import CreateDonationCampaign from "../pages/CreateDonationCampaign";
+import MyDonationCampaigns from "../pages/MyDonationCampaigns";
+import EditDonationCampaign from "../pages/EditDonationCampaign";
+import MyDonations from "../pages/MyDonations";
+import AdoptionRequests from "../pages/AdoptionRequests";
+import AdminRoute from "../components/Admin/AdminRoute";
+import AdminLayoutRoute from "../Layout/AdminLayoutRoute";
+import UserDashboardLayout from "../Layout/UserDashboardLayout";
+import AdminDashboard from "../pages/Admin/AdminDashboard";
+import AdminUsers from "../pages/Admin/AdminUsers";
+import AdminAllPets from "../pages/Admin/AdminAllPets";
+import AdminAllDonations from "../pages/Admin/AdminAllDonations";
+import { NotFound, Unauthorized, Forbidden, ServerError } from "../pages/ErrorPages";
 
 const route = createBrowserRouter([
     {
@@ -54,28 +68,46 @@ const route = createBrowserRouter([
                 element: <Register></Register>
             },
             {
-                path: "/add-pet",
-                element: (
-                    <ProtectedRoute>
-                        <AddPet></AddPet>
-                    </ProtectedRoute>
-                )
-            },
-            {
                 path: "/dashboard",
                 element: (
-                    <ProtectedRoute>
-                        <Dashboard></Dashboard>
-                    </ProtectedRoute>
-                )
-            },
-            {
-                path: "/dashboard/my-pets",
-                element: (
-                    <ProtectedRoute>
-                        <MyAddedPets />
-                    </ProtectedRoute>
-                )
+                    <UserRoute>
+                        <UserDashboardLayout />
+                    </UserRoute>
+                ),
+                children: [
+                    {
+                        index: true,
+                        element: <Dashboard />
+                    },
+                    {
+                        path: "add-pet",
+                        element: <AddPet />
+                    },
+                    {
+                        path: "my-pets",
+                        element: <MyAddedPets />
+                    },
+                    {
+                        path: "create-donation-campaign",
+                        element: <CreateDonationCampaign />
+                    },
+                    {
+                        path: "my-donation-campaigns",
+                        element: <MyDonationCampaigns />
+                    },
+                    {
+                        path: "edit-donation-campaign/:id",
+                        element: <EditDonationCampaign />
+                    },
+                    {
+                        path: "my-donations",
+                        element: <MyDonations />
+                    },
+                    {
+                        path: "adoption-requests",
+                        element: <AdoptionRequests />
+                    }
+                ]
             },
             {
                 path: "/update-pet/:id",
@@ -96,6 +128,69 @@ const route = createBrowserRouter([
         ]
     },
     {
+        path: "/admin",
+        element: (
+            <AdminRoute>
+                <AdminLayoutRoute />
+            </AdminRoute>
+        ),
+        children: [
+            {
+                index: true,
+                element: <AdminDashboard />
+            },
+            {
+                path: "dashboard",
+                element: <AdminDashboard />
+            },
+            {
+                path: "users",
+                element: <AdminUsers />
+            },
+            {
+                path: "pets",
+                element: <AdminAllPets />
+            },
+            {
+                path: "pets",
+                element: <AdminAllPets />
+            },
+            {
+                path: "donations",
+                element: <AdminAllDonations />
+            },
+            // Admin access to user functions
+            {
+                path: "add-pet",
+                element: <AddPet />
+            },
+            {
+                path: "my-pets",
+                element: <MyAddedPets />
+            },
+            {
+                path: "create-donation-campaign",
+                element: <CreateDonationCampaign />
+            },
+            {
+                path: "my-donation-campaigns",
+                element: <MyDonationCampaigns />
+            },
+            {
+                path: "edit-donation-campaign/:id",
+                element: <EditDonationCampaign />
+            },
+            {
+                path: "my-donations",
+                element: <MyDonations />
+            },
+            {
+                path: "adoption-requests",
+                element: <AdoptionRequests />
+            }
+        ]
+    },
+    {
         path: "/my-pets",
         element: (
             <ProtectedRoute>
@@ -110,6 +205,28 @@ const route = createBrowserRouter([
                 <UpdatePet />
             </ProtectedRoute>
         )
+    },
+    // Error Routes
+    {
+        path: "/error/404",
+        element: <NotFound />
+    },
+    {
+        path: "/error/401",
+        element: <Unauthorized />
+    },
+    {
+        path: "/error/403",
+        element: <Forbidden />
+    },
+    {
+        path: "/error/500",
+        element: <ServerError />
+    },
+    // Catch all route for 404 (must be last)
+    {
+        path: "*",
+        element: <NotFound />
     }
 ])
 

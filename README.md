@@ -22,44 +22,52 @@ A comprehensive full-stack web application for pet adoption, donation campaigns,
 - **Responsive Design**: Mobile-first approach with Tailwind CSS
 - **Dark/Light Mode**: Theme switching with DaisyUI
 - **Modern UI Components**: Beautiful, accessible components with React Icons
-- **Infinite Scroll**: Optimized pet listing with React Query
 - **Interactive Animations**: Lottie animations for enhanced UX
+- **Error Handling**: Comprehensive error pages and boundaries
+
+### 🛡️ Error Handling
+- **404 Not Found**: Custom page for missing resources
+- **401 Unauthorized**: Authentication required pages
+- **403 Forbidden**: Access denied for restricted content
+- **500 Server Error**: Internal server error handling
+- **Error Boundary**: React error boundary for JavaScript errors
+- **Graceful Degradation**: Fallback UI for failed components
 
 ## 🛠️ Tech Stack
 
 ### Frontend
-- **React 19.1.0** - Modern React with hooks and context
-- **React Router 7.6.3** - Client-side routing
-- **Tailwind CSS 4.1.11** - Utility-first CSS framework
-- **DaisyUI 5.0.46** - Component library for Tailwind
-- **TanStack Query 5.81.5** - Data fetching and state management
-- **TipTap 2.25.0** - Rich text editor
-- **Vite 7.0.0** - Build tool and dev server
+- **React 18+** - Modern React with hooks and context
+- **React Router 6+** - Client-side routing
+- **Tailwind CSS** - Utility-first CSS framework
+- **DaisyUI** - Component library for Tailwind
+- **TanStack Query** - Data fetching and state management
+- **TipTap** - Rich text editor
+- **Vite** - Build tool and dev server
 
 ### Authentication & Backend
-- **Firebase 11.10.0** - Authentication and backend services
-- **Axios 1.10.0** - HTTP client for API calls
+- **Firebase** - Authentication and backend services
+- **Axios** - HTTP client for API calls
 - **Stripe** - Payment processing
 
 ### Form Management & Validation
-- **Formik 2.4.6** - Form handling
-- **Yup 1.6.1** - Schema validation
-- **React Select 5.10.1** - Enhanced select components
+- **Formik** - Form handling
+- **Yup** - Schema validation
+- **React Select** - Enhanced select components
 
 ### UI Enhancement
-- **React Icons 5.5.0** - Icon library
-- **Lottie React 2.4.1** - Animation library
-- **SweetAlert2 11.22.2** - Beautiful alerts and modals
-- **Date-fns 4.1.0** - Date manipulation
+- **React Icons** - Icon library
+- **Lottie React** - Animation library
+- **SweetAlert2** - Beautiful alerts and modals
+- **Date-fns** - Date manipulation
 
 ### Development Tools
-- **ESLint 9.29.0** - Code linting
+- **ESLint** - Code linting
 - **Vite** - Development server and build tool
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js (v18 or higher)
 - npm or yarn package manager
 - Firebase project setup
 - ImgBB API key (for image uploads)
@@ -90,7 +98,7 @@ VITE_messagingSenderId=your_sender_id
 VITE_appId=your_app_id
 
 # API Configuration
-VITE_API_URL=http://localhost:5000
+VITE_API_URL=https://your-api-url.com
 
 # Third-party Services
 VITE_IMGBB_API_KEY=your_imgbb_api_key
@@ -115,18 +123,64 @@ src/
 │   ├── Admin/          # Admin-specific components
 │   ├── Donation/       # Donation-related components
 │   ├── PetListing/     # Pet listing components
-│   └── ...
+│   ├── AdoptionRequestForm.jsx
+│   ├── ErrorBoundary.jsx
+│   ├── Footer.jsx
+│   ├── Navbar.jsx
+│   ├── ProtectedRoute.jsx
+│   ├── TiptapEditor.jsx
+│   └── UserRoute.jsx
 ├── contexts/           # React contexts
+│   └── ThemeContext.jsx
 ├── hooks/              # Custom hooks
+│   └── useAuth.js
 ├── Layout/             # Layout components
+│   ├── AdminLayout.jsx
+│   ├── AdminLayoutRoute.jsx
+│   ├── DashboardLayout.jsx
+│   ├── MainLayout.jsx
+│   └── UserDashboardLayout.jsx
 ├── pages/              # Page components
 │   ├── Admin/         # Admin pages
+│   │   ├── AdminAllDonations.jsx
+│   │   ├── AdminAllPets.jsx
+│   │   ├── AdminDashboard.jsx
+│   │   └── AdminUsers.jsx
+│   ├── ErrorPages/    # Error pages
+│   │   ├── Forbidden.jsx       # 403 Forbidden
+│   │   ├── NotFound.jsx        # 404 Not Found
+│   │   ├── ServerError.jsx     # 500 Internal Server Error
+│   │   ├── Unauthorized.jsx    # 401 Unauthorized
+│   │   └── index.js
 │   ├── Home/          # Home page sections
 │   ├── PetList/       # Pet listing page
-│   └── ...
+│   ├── About.jsx
+│   ├── AddPet.jsx
+│   ├── AdoptionRequests.jsx
+│   ├── CreateDonationCampaign.jsx
+│   ├── Dashboard.jsx
+│   ├── DonationCampaigns.jsx
+│   ├── DonationDetails.jsx
+│   ├── EditDonationCampaign.jsx
+│   ├── Login.jsx
+│   ├── MyAddedPets.jsx
+│   ├── MyDonationCampaigns.jsx
+│   ├── MyDonations.jsx
+│   ├── Overview.jsx
+│   ├── PetDetails.jsx
+│   ├── Profile.jsx
+│   ├── Register.jsx
+│   └── UpdatePet.jsx
 ├── Provider/           # Context providers
+│   ├── AuthProvider.jsx
+│   └── firebase.init.js
 ├── Router/             # Route definitions
+│   └── Routes.jsx
 ├── utils/              # Utility functions
+│   ├── api.js
+│   ├── imageUpload.js
+│   ├── notifications.js
+│   └── tokenUtils.js
 └── index.css          # Global styles
 ```
 
@@ -187,6 +241,12 @@ src/
 - **Axios Interceptors**: Automatic token attachment
 - **Error Handling**: Centralized error management
 
+### Error Handling
+- **HTTP Status Codes**: Proper error status handling
+- **User-Friendly Messages**: Clear error communication
+- **Retry Logic**: Automatic retry for failed requests
+- **Fallback UI**: Graceful degradation on errors
+
 ## 🔐 Security Features
 
 ### Authentication
@@ -195,10 +255,20 @@ src/
 - **Token Management**: Automatic token refresh
 - **Role-based Access**: Admin and user role separation
 
-### Data Protection
+### Error Handling & Security
+- **Custom Error Pages**: User-friendly error handling
+- **Error Boundaries**: React error boundary for graceful failures
+- **Route Protection**: Unauthorized access prevention
 - **Input Validation**: Client and server-side validation
 - **CORS Configuration**: Proper cross-origin setup
 - **Secure Headers**: Security best practices
+
+### Error Routes
+- **404 Not Found** (`/error/404`, `/*`): Missing pages and resources
+- **401 Unauthorized** (`/error/401`): Authentication required
+- **403 Forbidden** (`/error/403`): Access denied for restricted content
+- **500 Server Error** (`/error/500`): Internal server errors
+- **Error Boundary**: JavaScript runtime error handling
 
 ## 📱 Responsive Design
 
@@ -221,7 +291,6 @@ src/
 
 ### Data Management
 - **React Query**: Intelligent caching and background updates
-- **Infinite Scroll**: Efficient large list handling
 - **Image Optimization**: Lazy loading and compression
 
 ### Build Optimization
@@ -245,20 +314,35 @@ npm run preview
 npm run lint
 ```
 
-## 📈 Future Enhancements
+## 📈 Project Status
 
-### Planned Features
+### ✅ Completed Features
+- **User Authentication**: Complete Firebase authentication system
+- **Pet Management**: Full CRUD operations for pets
+- **Donation System**: Campaign creation and management
+- **Admin Dashboard**: Comprehensive admin controls
+- **Responsive UI**: Mobile-first design implementation
+- **Image Upload**: ImgBB integration for pet photos
+- **Rich Text Editor**: TipTap editor for descriptions
+- **Payment Integration**: Stripe payment processing
+- **Role-based Access**: Admin and user permissions
+- **Search & Filter**: Advanced pet search functionality
+
+### 🔄 Recent Updates
+- Cleaned up unused files and components
+- Removed backup and temporary files
+- Optimized project structure
+- Updated dependencies
+- Enhanced error handling
+- Improved performance optimizations
+
+### 🚀 Future Enhancements
 - **Push Notifications**: Real-time notifications for adoption requests
 - **Chat System**: Real-time messaging between users
 - **AI Recommendations**: ML-based pet matching
 - **Mobile App**: React Native mobile application
 - **Advanced Analytics**: Detailed insights and reporting
-
-### Technical Improvements
 - **PWA Features**: Service workers and offline support
-- **Testing**: Unit and integration test coverage
-- **Performance Monitoring**: Error tracking and performance metrics
-- **SEO Optimization**: Meta tags and structured data
 
 ## 🤝 Contributing
 
@@ -274,8 +358,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-**Developer**: Saif Smran
-**GitHub**: [Programming-Hero-Web-Batch11](https://github.com/Programming-Hero-Web-Batch11)
+**Developer**: Saif Smran  
+**GitHub**: [Programming-Hero-Web-Course4](https://github.com/Programming-Hero-Web-Course4)  
 **Repository**: [b11a12-client-side-Saif-Smran](https://github.com/Programming-Hero-Web-Course4/b11a12-client-side-Saif-Smran)
 
 ---

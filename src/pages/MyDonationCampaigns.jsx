@@ -15,7 +15,7 @@ const MyDonationCampaigns = () => {
 
     const fetchCampaigns = useCallback(async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/donation-campaigns/my-campaigns`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/donation-campaigns/my-campaigns`, {
                 headers: {
                     'Authorization': `Bearer ${await user.getIdToken()}`
                 }
@@ -41,7 +41,7 @@ const MyDonationCampaigns = () => {
 
     const toggleCampaignStatus = async (campaignId) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/donation-campaigns/${campaignId}/toggle-status`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/donation-campaigns/${campaignId}/toggle-status`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${await user.getIdToken()}`
@@ -67,7 +67,7 @@ const MyDonationCampaigns = () => {
         setShowDonatorsModal(true);
         
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/donation-campaigns/${campaignId}/donations`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/donation-campaigns/${campaignId}/donations`, {
                 headers: {
                     'Authorization': `Bearer ${await user.getIdToken()}`
                 }

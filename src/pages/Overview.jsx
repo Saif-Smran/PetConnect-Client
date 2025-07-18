@@ -29,7 +29,7 @@ const Overview = () => {
         try {
             setStatsLoading(true);
             const token = await user.getIdToken();
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/user-stats`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/user-stats`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

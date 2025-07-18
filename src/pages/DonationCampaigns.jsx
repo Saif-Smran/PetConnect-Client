@@ -11,7 +11,7 @@ import DonationModal from '../components/Donation/DonationModal';
 
 const fetchDonations = async ({ pageParam = 0 }) => {
   const limit = 6;
-  const response = await axios.get(`http://localhost:3000/donations?skip=${pageParam}&limit=${limit}`);
+  const response = await axios.get(`https://pet-connect-server-one.vercel.app/donations?skip=${pageParam}&limit=${limit}`);
   return response.data;
 };
 

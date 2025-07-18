@@ -15,7 +15,7 @@ const MyDonations = () => {
         try {
             setLoading(true);
             const token = await user.getIdToken();
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/my-donations`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/my-donations`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -72,7 +72,7 @@ const MyDonations = () => {
             try {
                 setRefundingId(donationId);
                 const token = await user.getIdToken();
-                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/my-donations/${donationId}/refund`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/my-donations/${donationId}/refund`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`

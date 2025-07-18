@@ -14,7 +14,7 @@ const RecommendedDonations = ({ currentDonationId }) => {
   const { data: recommendations, isLoading } = useQuery({
     queryKey: ['recommended-donations', currentDonationId],
     queryFn: async () => {
-      const response = await axios.get(`http://localhost:3000/donations/recommended/${currentDonationId}`);
+      const response = await axios.get(`https://pet-connect-server-one.vercel.app/donations/recommended/${currentDonationId}`);
       return response.data;
     },
     enabled: !!currentDonationId
