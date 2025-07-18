@@ -4,7 +4,6 @@ import { useAuth } from '../hooks/useAuth';
 import { showSuccessNotification, showErrorNotification } from '../utils/notifications';
 import { FaHeart, FaEdit, FaEye, FaPause, FaPlay, FaCalendarAlt, FaInfoCircle } from 'react-icons/fa';
 import { MdPets } from 'react-icons/md';
-import DashboardLayout from '../Layout/DashboardLayout';
 
 const MyDonationCampaigns = () => {
     const { user } = useAuth();
@@ -124,20 +123,17 @@ const MyDonationCampaigns = () => {
 
     if (loading) {
         return (
-            <DashboardLayout activeMenuId="my-donation-campaigns">
-                <div className="w-full max-w-4xl mx-auto">
-                    <div className="text-center py-16">
-                        <span className="loading loading-spinner loading-lg text-primary"></span>
-                        <p className="mt-4 text-lg text-base-content/70">Loading your campaigns...</p>
-                    </div>
+            <div className="w-full max-w-4xl mx-auto">
+                <div className="text-center py-16">
+                    <span className="loading loading-spinner loading-lg text-primary"></span>
+                    <p className="mt-4 text-lg text-base-content/70">Loading your campaigns...</p>
                 </div>
-            </DashboardLayout>
+            </div>
         );
     }
 
     return (
-        <DashboardLayout activeMenuId="my-donation-campaigns">
-            <div className="w-full max-w-6xl mx-auto">
+        <div className="w-full max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 rounded-full text-primary font-medium mb-4">
@@ -335,7 +331,6 @@ const MyDonationCampaigns = () => {
                     </div>
                 )}
             </div>
-        </DashboardLayout>
     );
 };
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../Provider/AuthProvider';
 import { showSuccess, showError, showConfirmation } from '../../utils/notifications';
 import { FaUsers, FaUserShield, FaUser, FaEllipsisV } from 'react-icons/fa';
+import api from '../../utils/api';
 
 const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
@@ -12,23 +13,11 @@ const AdminDashboard = () => {
     // Fetch all users
     const fetchUsers = async () => {
         try {
-            const token = localStorage.getItem('access_token');
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/users`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setUsers(data);
-            } else {
-                const errorData = await response.json();
-                showError('Error', errorData.error || 'Failed to fetch users');
-            }
+            const response = await api.get('/auth/users');
+            setUsers(response.data);
         } catch (error) {
             console.error('Error fetching users:', error);
-            showError('Error', 'Failed to fetch users');
+            showError('Error', error.response?.data?.error || 'Failed to fetch users');
         } finally {
             setLoading(false);
         }
@@ -49,24 +38,12 @@ const AdminDashboard = () => {
         if (result.isConfirmed) {
             setActionLoading(userId);
             try {
-                const token = localStorage.getItem('access_token');
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/users/${userId}/promote`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    showSuccess('Success', `${userName} has been promoted to admin`);
-                    fetchUsers(); // Refresh the list
-                } else {
-                    const errorData = await response.json();
-                    showError('Error', errorData.error || 'Failed to promote user');
-                }
+                await api.patch(`/auth/users/${userId}/promote`);
+                showSuccess('Success', `${userName} has been promoted to admin`);
+                fetchUsers(); // Refresh the list
             } catch (error) {
                 console.error('Error promoting user:', error);
-                showError('Error', 'Failed to promote user');
+                showError('Error', error.response?.data?.error || 'Failed to promote user');
             } finally {
                 setActionLoading(null);
             }
@@ -84,24 +61,12 @@ const AdminDashboard = () => {
         if (result.isConfirmed) {
             setActionLoading(userId);
             try {
-                const token = localStorage.getItem('access_token');
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/users/${userId}/demote`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                if (response.ok) {
-                    showSuccess('Success', `${userName} has been demoted to regular user`);
-                    fetchUsers(); // Refresh the list
-                } else {
-                    const errorData = await response.json();
-                    showError('Error', errorData.error || 'Failed to demote user');
-                }
+                await api.patch(`/auth/users/${userId}/demote`);
+                showSuccess('Success', `${userName} has been demoted to regular user`);
+                fetchUsers(); // Refresh the list
             } catch (error) {
                 console.error('Error demoting user:', error);
-                showError('Error', 'Failed to demote user');
+                showError('Error', error.response?.data?.error || 'Failed to demote user');
             } finally {
                 setActionLoading(null);
             }
@@ -123,16 +88,15 @@ const AdminDashboard = () => {
     const regularUsers = users.filter(u => u.role === 'user');
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
-            <div className="max-w-7xl mx-auto px-4">
-                <div className="mb-8">
-                    <h1 className="font-secondary font-bold text-3xl mb-2">
-                        Admin Dashboard
-                    </h1>
-                    <p className="font-primary opacity-70">
-                        Manage users and their roles
-                    </p>
-                </div>
+        <div className="w-full">
+            <div className="mb-8">
+                <h1 className="font-secondary font-bold text-3xl mb-2">
+                    Admin Dashboard
+                </h1>
+                <p className="font-primary opacity-70">
+                    Manage users and their roles
+                </p>
+            </div>
 
                 {/* Statistics Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

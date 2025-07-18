@@ -8,11 +8,11 @@ import {
 
 const menuItems = [
   { id: 'overview', label: 'Overview', icon: FaHome, path: '/dashboard' },
-  { id: 'add-pet', label: 'Add a Pet', icon: FaPlusCircle, path: '/add-pet' },
+  { id: 'add-pet', label: 'Add a Pet', icon: FaPlusCircle, path: '/dashboard/add-pet' },
   { id: 'my-pets', label: 'My Added Pets', icon: FaPaw, path: '/dashboard/my-pets' },
   { id: 'adoption-requests', label: 'Adoption Request', icon: FaHeart, path: '/dashboard/adoption-requests' },
-  { id: 'create-donation', label: 'Create Donation Campaign', icon: FaBullhorn, path: '/dashboard/create-donation-campaign' },
-  { id: 'my-campaigns', label: 'My Donation Campaigns', icon: FaDonate, path: '/dashboard/my-donation-campaigns' },
+  { id: 'create-donation', label: 'Create Donation Campaign', icon: FaBullhorn, path: '/dashboard/create-donation' },
+  { id: 'my-campaigns', label: 'My Donation Campaigns', icon: FaDonate, path: '/dashboard/my-campaigns' },
   { id: 'my-donations', label: 'My Donations', icon: FaHandHoldingHeart, path: '/dashboard/my-donations' }
 ];
 
@@ -116,6 +116,7 @@ const DashboardLayout = ({ children, activeMenuId }) => {
                       <span className="badge">New</span>
                     </a>
                   </li>
+                  <li><a><FaCog className="w-4 h-4" /> Settings</a></li>
                   <li><a><FaSignOutAlt className="w-4 h-4" /> Logout</a></li>
                 </ul>
               </div>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import DashboardLayout from '../Layout/DashboardLayout';
 import { FaHeart, FaTrash, FaEye, FaSpinner } from 'react-icons/fa';
 import { MdPets } from 'react-icons/md';
 import Swal from 'sweetalert2';
@@ -108,20 +107,17 @@ const MyDonations = () => {
 
     if (loading) {
         return (
-            <DashboardLayout activeMenuId="my-donations">
-                <div className="flex justify-center items-center h-64">
-                    <div className="text-center">
-                        <FaSpinner className="animate-spin text-4xl text-primary mb-4 mx-auto" />
-                        <p className="text-lg">Loading your donations...</p>
-                    </div>
+            <div className="flex justify-center items-center h-64">
+                <div className="text-center">
+                    <FaSpinner className="animate-spin text-4xl text-primary mb-4 mx-auto" />
+                    <p className="text-lg">Loading your donations...</p>
                 </div>
-            </DashboardLayout>
+            </div>
         );
     }
 
     return (
-        <DashboardLayout activeMenuId="my-donations">
-            <div className="w-full max-w-7xl mx-auto">
+        <div className="w-full max-w-11/12 mx-auto">
                 {/* Header */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 rounded-full text-primary font-medium mb-4">
@@ -265,7 +261,6 @@ const MyDonations = () => {
                     </div>
                 )}
             </div>
-        </DashboardLayout>
     );
 };
 

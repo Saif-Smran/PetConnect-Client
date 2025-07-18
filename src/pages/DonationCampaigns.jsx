@@ -150,7 +150,7 @@ const DonationCampaigns = () => {
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-secondary/3"></div>
       
-      <div className="max-w-7xl mx-auto px-6 py-16 relative z-10">
+      <div className="max-w-11/12 mx-auto px-6 py-16 relative z-10">
         {/* Hero Section */}
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 rounded-full text-primary font-medium mb-6">

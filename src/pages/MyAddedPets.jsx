@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { FaPaw, FaEdit, FaTrash, FaHeart, FaPlus } from 'react-icons/fa';
-import DashboardLayout from '../Layout/DashboardLayout';
 import { useAuth } from '../hooks/useAuth';
 import { getFreshFirebaseToken, isValidFirebaseToken } from '../utils/tokenUtils';
 
@@ -46,7 +45,9 @@ const MyAddedPets = () => {
       console.log('✅ Response received:', res.data);
       console.log('✅ Response length:', res.data.length);
       
-      setData(res.data);
+      // Ensure data is always an array
+      const petsData = Array.isArray(res.data) ? res.data : [];
+      setData(petsData);
       console.log('✅ Data set successfully');
     } catch (error) {
       console.error('❌ Error fetching pets:', error);
@@ -63,7 +64,8 @@ const MyAddedPets = () => {
             },
           });
           console.log('✅ Retry successful:', res.data);
-          setData(res.data);
+          const petsData = Array.isArray(res.data) ? res.data : [];
+          setData(petsData);
           return;
         } catch (retryError) {
           console.error('Retry with fresh token also failed:', retryError);
@@ -185,7 +187,7 @@ const MyAddedPets = () => {
   console.log('Data length:', data.length);
 
   return (
-    <DashboardLayout activeMenuId="my-pets">
+    <div>
       {isLoading ? (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
@@ -211,7 +213,7 @@ const MyAddedPets = () => {
               
               {/* Add New Pet Button */}
               <button
-                onClick={() => navigate('/add-pet')}
+                onClick={() => navigate('/dashboard/add-pet')}
                 className="btn btn-primary btn-lg gap-3 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
                 <FaPlus className="w-5 h-5" />
@@ -223,17 +225,17 @@ const MyAddedPets = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <div className="backdrop-blur-lg bg-base-100/80 border border-base-content/10 rounded-2xl p-6 text-center">
                 <div className="text-3xl mb-2">🐾</div>
-                <h3 className="text-2xl font-bold text-primary">{data.length}</h3>
+                <h3 className="text-2xl font-bold text-primary">{Array.isArray(data) ? data.length : 0}</h3>
                 <p className="text-base-content/70">Total Pets</p>
               </div>
               <div className="backdrop-blur-lg bg-base-100/80 border border-base-content/10 rounded-2xl p-6 text-center">
                 <div className="text-3xl mb-2">❤️</div>
-                <h3 className="text-2xl font-bold text-success">{data.filter(pet => pet.adopted).length}</h3>
+                <h3 className="text-2xl font-bold text-success">{Array.isArray(data) ? data.filter(pet => pet.adopted).length : 0}</h3>
                 <p className="text-base-content/70">Adopted</p>
               </div>
               <div className="backdrop-blur-lg bg-base-100/80 border border-base-content/10 rounded-2xl p-6 text-center">
                 <div className="text-3xl mb-2">🏠</div>
-                <h3 className="text-2xl font-bold text-warning">{data.filter(pet => !pet.adopted).length}</h3>
+                <h3 className="text-2xl font-bold text-warning">{Array.isArray(data) ? data.filter(pet => !pet.adopted).length : 0}</h3>
                 <p className="text-base-content/70">Available</p>
               </div>
             </div>
@@ -247,13 +249,13 @@ const MyAddedPets = () => {
                 </h2>
               </div>
               
-              {data.length === 0 ? (
+              {!Array.isArray(data) || data.length === 0 ? (
                 <div className="text-center py-16">
                   <div className="text-6xl mb-4">🐕</div>
                   <h3 className="text-2xl font-bold text-base-content mb-2">No Pets Added Yet</h3>
                   <p className="text-base-content/70 mb-6">Start by adding your first pet for adoption</p>
                   <button
-                    onClick={() => navigate('/add-pet')}
+                    onClick={() => navigate('/dashboard/add-pet')}
                     className="btn btn-primary btn-lg gap-3"
                   >
                     <FaPlus className="w-5 h-5" />
@@ -373,7 +375,7 @@ const MyAddedPets = () => {
           </div>
         </div>
       )}
-    </DashboardLayout>
+    </div>
   );
 };
 
