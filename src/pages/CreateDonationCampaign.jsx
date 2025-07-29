@@ -8,6 +8,7 @@ import { FaCamera, FaDollarSign, FaCalendarAlt, FaInfoCircle, FaFileAlt, FaHeart
 import { MdPets } from 'react-icons/md';
 import Swal from 'sweetalert2';
 import TiptapEditor from '../components/TiptapEditor';
+import DynamicTitle from '../components/DynamicTitle';
 
 // Validation schema
 const validationSchema = Yup.object({
@@ -183,6 +184,7 @@ const CreateDonationCampaign = ({ showEndpointInfo = false }) => {
 
     return (
         <div className="w-full max-w-4xl mx-auto">
+            <DynamicTitle title="Create Donation Campaign - Start a Fundraiser" />
             {showEndpointInfo && (
                 <div className="mb-6 p-4 rounded-xl bg-info/10 border border-info/30 text-info text-sm flex items-center gap-2">
                     <FaInfoCircle className="mr-2" />

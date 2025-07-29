@@ -4,6 +4,7 @@ import { FaHeart, FaTrash, FaEye, FaSpinner } from 'react-icons/fa';
 import { MdPets } from 'react-icons/md';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
+import DynamicTitle from '../components/DynamicTitle';
 
 const MyDonations = () => {
     const { user } = useAuth();
@@ -15,7 +16,7 @@ const MyDonations = () => {
         try {
             setLoading(true);
             const token = await user.getIdToken();
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/my-donations`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app/'}/my-donations`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -72,7 +73,7 @@ const MyDonations = () => {
             try {
                 setRefundingId(donationId);
                 const token = await user.getIdToken();
-                const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/my-donations/${donationId}/refund`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app/'}/my-donations/${donationId}/refund`, {
                     method: 'DELETE',
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -118,6 +119,7 @@ const MyDonations = () => {
 
     return (
         <div className="w-full max-w-11/12 mx-auto">
+            <DynamicTitle title="My Donations - Donation History" />
                 {/* Header */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 rounded-full text-primary font-medium mb-4">

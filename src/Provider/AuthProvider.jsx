@@ -1,9 +1,9 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { GoogleAuthProvider, GithubAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut, updateProfile } from "firebase/auth";
 import app from './firebase.init';
-import { showSuccess, showError } from '../utils/notifications';
+import api from '../utils/api';
+import { AuthContext } from '../contexts/AuthContext';
 
-export const AuthContext = createContext(null)
 const auth = getAuth(app)
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -51,60 +51,28 @@ const AuthProvider = ({ children }) => {
     // Check if user exists in database
     const checkUserExists = async (uid) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/check-user/${uid}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-            
-            if (response.ok) {
-                const result = await response.json();
-                return result.exists;
-            }
-            return false;
+            const response = await api.get(`/auth/check-user/${uid}`);
+            return response.data.exists;
         } catch (error) {
             console.error('Error checking user existence:', error);
             return false;
         }
     }
 
-    // Save user to database after successful authentication
+        // Save user to database after successful authentication
     const saveUserToDatabase = async (userData, isFirstTime = false) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/save-user`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...userData,
-                    isFirstTime
-                }),
+            const response = await api.post('/auth/save-user', {
+                uid: userData.uid,
+                displayName: userData.displayName,
+                email: userData.email,
+                photoURL: userData.photoURL,
+                role: 'user',
+                isFirstTime
             });
-            
-            if (response.ok) {
-                const result = await response.json();
-                // Store JWT token
-                if (result.access_token) {
-                    localStorage.setItem('access_token', result.access_token);
-                }
-                
-                // Show appropriate message
-                if (isFirstTime) {
-                    showSuccess('Welcome to PetConnect!', 'Your account has been created successfully.');
-                } else {
-                    showSuccess('Welcome back!', 'You have been logged in successfully.');
-                }
-                
-                return result;
-            } else {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to save user data');
-            }
+            return response.data;
         } catch (error) {
             console.error('Error saving user to database:', error);
-            showError('Database Error', 'Failed to save user information. Please try again.');
             throw error;
         }
     }

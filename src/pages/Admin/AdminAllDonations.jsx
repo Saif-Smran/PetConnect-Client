@@ -3,6 +3,7 @@ import { FaHeart, FaEdit, FaTrash, FaPause, FaPlay, FaSync, FaSearch, FaEye } fr
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import api from '../../utils/api';
+import DynamicTitle from '../../components/DynamicTitle';
 
 const AdminAllDonations = () => {
     const [donations, setDonations] = useState([]);
@@ -143,6 +144,7 @@ const AdminAllDonations = () => {
 
     return (
         <div className="h-full bg-gradient-to-br from-base-200 via-base-100 to-base-200">
+            <DynamicTitle title="Admin Donations - Manage All Campaigns" />
             <div className="w-full h-full p-4">
                 {/* Header */}
                 <div className="text-center mb-6">

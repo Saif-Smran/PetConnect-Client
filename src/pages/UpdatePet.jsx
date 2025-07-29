@@ -10,6 +10,7 @@ import TiptapEditor from '../components/TiptapEditor';
 import DashboardLayout from '../Layout/DashboardLayout';
 import { useAuth } from '../hooks/useAuth';
 import { getFreshFirebaseToken, isValidFirebaseToken } from '../utils/tokenUtils';
+import DynamicTitle from '../components/DynamicTitle';
 
 // Pet categories for dropdown
 const petCategories = [
@@ -321,6 +322,7 @@ const UpdatePet = () => {
 
   return (
     <DashboardLayout activeMenuId="my-pets">
+      <DynamicTitle title={petData ? `Update ${petData.petName || petData.name} - Edit Pet Details` : "Update Pet"} />
       <div className="w-full max-w-4xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">

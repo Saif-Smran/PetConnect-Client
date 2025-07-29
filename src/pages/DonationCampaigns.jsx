@@ -8,6 +8,7 @@ import { HiSparkles } from 'react-icons/hi';
 import Swal from 'sweetalert2';
 import { useAuth } from '../hooks/useAuth';
 import DonationModal from '../components/Donation/DonationModal';
+import DynamicTitle from '../components/DynamicTitle';
 
 const fetchDonations = async ({ pageParam = 0 }) => {
   const limit = 6;
@@ -147,6 +148,7 @@ const DonationCampaigns = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200 relative overflow-hidden">
+      <DynamicTitle title="Donation Campaigns - Support Pet Care" />
       {/* Background decoration */}
       <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-secondary/3"></div>
       

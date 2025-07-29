@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { FaPaw, FaEdit, FaTrash, FaHeart, FaPlus } from 'react-icons/fa';
 import { useAuth } from '../hooks/useAuth';
 import { getFreshFirebaseToken, isValidFirebaseToken } from '../utils/tokenUtils';
+import DynamicTitle from '../components/DynamicTitle';
 
 const MyAddedPets = () => {
   const navigate = useNavigate();
@@ -188,6 +189,7 @@ const MyAddedPets = () => {
 
   return (
     <div>
+      <DynamicTitle title="My Added Pets - Manage Your Pet Listings" />
       {isLoading ? (
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">

@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../hooks/useAuth';
 import axios from 'axios';
+import DynamicTitle from '../components/DynamicTitle';
 import { 
   FaArrowLeft, 
   FaHeart, 
@@ -136,6 +137,7 @@ const PetDetails = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200">
+      <DynamicTitle title={pet ? `${getName()} - Pet Details` : "Pet Details"} />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">

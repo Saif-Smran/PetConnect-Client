@@ -4,6 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import { showSuccessNotification, showErrorNotification } from '../utils/notifications';
 import { FaHeart, FaEdit, FaEye, FaPause, FaPlay, FaCalendarAlt, FaInfoCircle } from 'react-icons/fa';
 import { MdPets } from 'react-icons/md';
+import DynamicTitle from '../components/DynamicTitle';
 
 const MyDonationCampaigns = () => {
     const { user } = useAuth();
@@ -15,7 +16,7 @@ const MyDonationCampaigns = () => {
 
     const fetchCampaigns = useCallback(async () => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/donation-campaigns/my-campaigns`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app/'}/donation-campaigns/my-campaigns`, {
                 headers: {
                     'Authorization': `Bearer ${await user.getIdToken()}`
                 }
@@ -41,7 +42,7 @@ const MyDonationCampaigns = () => {
 
     const toggleCampaignStatus = async (campaignId) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/donation-campaigns/${campaignId}/toggle-status`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app/'}/donation-campaigns/${campaignId}/toggle-status`, {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${await user.getIdToken()}`
@@ -67,7 +68,7 @@ const MyDonationCampaigns = () => {
         setShowDonatorsModal(true);
         
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/donation-campaigns/${campaignId}/donations`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app/'}/donation-campaigns/${campaignId}/donations`, {
                 headers: {
                     'Authorization': `Bearer ${await user.getIdToken()}`
                 }
@@ -134,6 +135,7 @@ const MyDonationCampaigns = () => {
 
     return (
         <div className="w-full max-w-6xl mx-auto">
+            <DynamicTitle title="My Donation Campaigns - Manage Your Campaigns" />
                 {/* Header */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 rounded-full text-primary font-medium mb-4">

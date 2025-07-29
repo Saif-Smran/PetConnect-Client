@@ -9,6 +9,7 @@ import PetGrid from '../../components/PetListing/PetGrid';
 import LoadingSpinner from '../../components/PetListing/LoadingSpinner';
 import ErrorMessage from '../../components/PetListing/ErrorMessage';
 import EmptyState from '../../components/PetListing/EmptyState';
+import DynamicTitle from '../../components/DynamicTitle';
 
 const fetchPets = async ({ pageParam = 0, queryKey }) => {
   const [_key, { category, search }] = queryKey;
@@ -109,6 +110,7 @@ const Petlist = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200">
+      <DynamicTitle title="Pet Listings - Browse All Available Pets" />
       <div className="container mx-auto px-4 py-16">
         {/* Hero Section */}
         <PetListingHero totalPets={totalPets} />

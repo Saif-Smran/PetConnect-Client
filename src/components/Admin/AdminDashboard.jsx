@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../../Provider/AuthProvider';
+import { AuthContext } from '../../contexts/AuthContext';
 import { showSuccess, showError, showConfirmation } from '../../utils/notifications';
 import { FaUsers, FaUserShield, FaUser, FaEllipsisV } from 'react-icons/fa';
 import api from '../../utils/api';

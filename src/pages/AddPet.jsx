@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import axios from 'axios';
 import TiptapEditor from '../components/TiptapEditor';
 import { getFreshFirebaseToken } from '../utils/tokenUtils';
+import DynamicTitle from '../components/DynamicTitle';
 
 // Pet categories for dropdown
 const petCategories = [
@@ -214,6 +215,7 @@ const AddPet = ({ showEndpointInfo = false }) => {
 
   return (
     <div className="w-full max-w-4xl mx-auto">
+      <DynamicTitle title="Add Pet - List Your Pet for Adoption" />
       {showEndpointInfo && (
         <div className="mb-6 p-4 rounded-xl bg-info/10 border border-info/30 text-info text-sm flex items-center gap-2">
           <FaInfoCircle className="mr-2" />

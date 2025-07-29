@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext } from '../Provider/AuthProvider';
+import { AuthContext } from '../contexts/AuthContext';
 import { FaGoogle, FaGithub, FaEye, FaEyeSlash, FaEnvelope, FaLock } from 'react-icons/fa';
 import { showError } from '../utils/notifications';
 import Lottie from 'lottie-react';
+import DynamicTitle from '../components/DynamicTitle';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -186,6 +187,7 @@ const Login = () => {
                 backgroundImage: "url('/BannerBGImage.jpg')"
             }}
         >
+            <DynamicTitle title="Login - Access Your Account" />
             {/* Background overlay */}
             <div className="absolute inset-0 bg-base-100/30 backdrop-blur-sm"></div>
             

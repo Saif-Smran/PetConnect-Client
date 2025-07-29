@@ -3,6 +3,7 @@ import { FaPaw, FaEdit, FaTrash, FaCheck, FaTimes, FaSync, FaSearch, FaEye } fro
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import api from '../../utils/api';
+import DynamicTitle from '../../components/DynamicTitle';
 
 const AdminAllPets = () => {
     const [pets, setPets] = useState([]);
@@ -123,6 +124,7 @@ const AdminAllPets = () => {
 
     return (
         <div className="h-full bg-gradient-to-br from-base-200 via-base-100 to-base-200">
+            <DynamicTitle title="Admin Pets - Manage All Pet Listings" />
             <div className="w-full h-full p-4">
                 {/* Header */}
                 <div className="text-center mb-6">

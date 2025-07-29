@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { MdPets } from 'react-icons/md';
 import { FaCat, FaDog, FaFish } from 'react-icons/fa';
 import { GiRabbit } from 'react-icons/gi';
-import axios from 'axios';
+import api from '../../utils/api';
 
 const categories = [
   { name: 'All', value: 'all', icon: <MdPets className="w-5 h-5" /> },
@@ -21,12 +21,12 @@ const Category = () => {
   const fetchPets = async (categoryValue) => {
     setLoading(true);
     try {
-      const url = categoryValue && categoryValue !== 'all'
-        ? `${import.meta.env.VITE_API_URL}/pets?category=${categoryValue}`
-        : `${import.meta.env.VITE_API_URL}/pets`;
+      const endpoint = categoryValue && categoryValue !== 'all'
+        ? `/pets?category=${categoryValue}`
+        : `/pets`;
 
-      console.log('🔍 Fetching pets from:', url);
-      const response = await axios.get(url);
+      console.log('🔍 Fetching pets from:', endpoint);
+      const response = await api.get(endpoint);
       let petsData = response.data;
       
       console.log('📊 Received pets data:', petsData.length, 'pets');

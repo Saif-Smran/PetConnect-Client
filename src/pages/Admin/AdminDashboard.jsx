@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FaUsers, FaPaw, FaHeart, FaEye, FaChartBar, FaDollarSign, FaUserShield, FaCalendarAlt } from 'react-icons/fa';
 import api from '../../utils/api';
+import DynamicTitle from '../../components/DynamicTitle';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState({
@@ -52,6 +53,7 @@ const AdminDashboard = () => {
 
     return (
         <div className="h-full bg-gradient-to-br from-base-200 via-base-100 to-base-200">
+            <DynamicTitle title="Admin Dashboard - Manage Platform" />
             <div className="w-full h-full p-4">
                 {/* Header */}
                 <div className="text-center mb-6">

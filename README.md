@@ -23,6 +23,7 @@ A comprehensive full-stack web application for pet adoption, donation campaigns,
 - **Dark/Light Mode**: Theme switching with DaisyUI
 - **Modern UI Components**: Beautiful, accessible components with React Icons
 - **Interactive Animations**: Lottie animations for enhanced UX
+- **Dynamic Page Titles**: Automatic page title updates based on content
 - **Error Handling**: Comprehensive error pages and boundaries
 
 ### 🛡️ Error Handling
@@ -124,6 +125,7 @@ src/
 │   ├── Donation/       # Donation-related components
 │   ├── PetListing/     # Pet listing components
 │   ├── AdoptionRequestForm.jsx
+│   ├── DynamicTitle.jsx # Dynamic page title management
 │   ├── ErrorBoundary.jsx
 │   ├── Footer.jsx
 │   ├── Navbar.jsx
@@ -220,11 +222,12 @@ src/
 - **Typography**: Inter & Nunito font families
 - **Responsive**: Mobile-first design approach
 
-### Interactive Elements
+### UI Enhancement
 - **Loading States**: Skeleton loaders and spinners
 - **Error Handling**: User-friendly error messages
 - **Success Feedback**: Toast notifications and alerts
 - **Smooth Transitions**: CSS transitions and animations
+- **Dynamic Titles**: Contextual page titles that update based on content
 
 ## 🔧 API Integration
 
@@ -327,6 +330,7 @@ npm run lint
 - **Payment Integration**: Stripe payment processing
 - **Role-based Access**: Admin and user permissions
 - **Search & Filter**: Advanced pet search functionality
+- **Dynamic Page Titles**: Contextual titles for all pages
 
 ### 🔄 Recent Updates
 - Cleaned up unused files and components

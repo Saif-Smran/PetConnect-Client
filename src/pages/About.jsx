@@ -1,6 +1,7 @@
 import React from 'react';
 import { HiHeart, HiSparkles, HiShieldCheck } from 'react-icons/hi';
 import { MdPets, MdVerified, MdFavorite, MdHome, MdSearch, MdConnectWithoutContact } from 'react-icons/md';
+import DynamicTitle from '../components/DynamicTitle';
 
 const About = () => {
     const values = [
@@ -41,6 +42,7 @@ const About = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-base-100 via-base-200/20 to-base-100 relative overflow-hidden">
+            <DynamicTitle title="About Us - Our Mission & Values" />
             {/* Background decoration */}
             <div className="absolute inset-0 bg-gradient-to-r from-primary/3 via-transparent to-secondary/3"></div>
             

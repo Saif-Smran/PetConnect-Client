@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaUser, FaUserShield, FaCrown, FaBan, FaCheck, FaSync, FaSearch } from 'react-icons/fa';
 import Swal from 'sweetalert2';
 import api from '../../utils/api';
+import DynamicTitle from '../../components/DynamicTitle';
 
 const AdminUsers = () => {
     const [users, setUsers] = useState([]);
@@ -148,6 +149,7 @@ const AdminUsers = () => {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-base-200 via-base-100 to-base-200">
+            <DynamicTitle title="Admin Users - Manage User Accounts" />
             <div className="max-w-full mx-auto p-3">
                 {/* Header */}
                 <div className="text-center mb-8">

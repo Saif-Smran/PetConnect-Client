@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext } from '../Provider/AuthProvider';
+import { AuthContext } from '../contexts/AuthContext';
 import { FaGoogle, FaGithub, FaEye, FaEyeSlash, FaUser, FaCamera, FaEnvelope, FaLock, FaUserCheck } from 'react-icons/fa';
 import { showError, showLoading, closeSwal } from '../utils/notifications';
 import { uploadImageToImBB, validateImageFile } from '../utils/imageUpload';
 import Lottie from 'lottie-react';
+import DynamicTitle from '../components/DynamicTitle';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -257,6 +258,7 @@ const Register = () => {
                 backgroundRepeat: 'no-repeat'
             }}
         >
+            <DynamicTitle title="Register - Create Your Account" />
             {/* Background Overlay */}
             <div className="absolute inset-0 bg-base-100/40 backdrop-blur-sm"></div>
             

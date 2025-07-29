@@ -8,6 +8,8 @@ import {
     FaHandHoldingHeart
 } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi';
+import api from '../utils/api';
+import DynamicTitle from '../components/DynamicTitle';
 
 const Overview = () => {
     const { user } = useAuth();
@@ -28,19 +30,8 @@ const Overview = () => {
         
         try {
             setStatsLoading(true);
-            const token = await user.getIdToken();
-            const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/user-stats`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            if (response.ok) {
-                const stats = await response.json();
-                setUserStats(stats);
-            } else {
-                console.error('Failed to fetch user stats');
-            }
+            const response = await api.get('/user-stats');
+            setUserStats(response.data);
         } catch (error) {
             console.error('Error fetching user stats:', error);
         } finally {
@@ -54,6 +45,7 @@ const Overview = () => {
 
     return (
         <div className="space-y-8">
+            <DynamicTitle title="Dashboard - Your Pet Activity Overview" />
             {/* Welcome Section */}
             <div className="backdrop-blur-lg bg-gradient-to-r from-primary/10 via-secondary/10 to-accent/10 border border-base-content/10 rounded-3xl p-8">
                 <div className="flex items-center gap-4 mb-6">

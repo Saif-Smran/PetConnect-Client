@@ -4,6 +4,7 @@ import { FaCheck, FaTimes, FaSpinner, FaEnvelope, FaPhone, FaMapMarkerAlt, FaUse
 import { MdPets } from 'react-icons/md';
 import Swal from 'sweetalert2';
 import { format } from 'date-fns';
+import DynamicTitle from '../components/DynamicTitle';
 
 const AdoptionRequests = () => {
     const { user } = useAuth();
@@ -140,6 +141,7 @@ const AdoptionRequests = () => {
 
     return (
         <div className="w-full max-w-11/12 mx-auto">
+            <DynamicTitle title="Adoption Requests - Manage Pet Applications" />
             <div className="text-center mb-8">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 rounded-full text-primary font-medium mb-4">
                     <MdPets className="w-5 h-5" />
