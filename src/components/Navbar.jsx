@@ -4,8 +4,8 @@ import { useAuth } from '../hooks/useAuth';
 import { showConfirmation, showSuccess } from '../utils/notifications';
 import api from '../utils/api';
 
-import { 
-    HiHome, 
+import {
+    HiHome,
     HiInformationCircle,
     HiSun,
     HiMoon,
@@ -18,13 +18,13 @@ import {
     HiCog,
     HiViewGrid
 } from 'react-icons/hi';
-import { 
-    MdPets, 
+import {
+    MdPets,
     MdVolunteerActivism,
     MdDashboard,
     MdPerson,
     MdSettings,
-    MdLogout 
+    MdLogout
 } from 'react-icons/md';
 import { FiLogIn, FiUserPlus } from 'react-icons/fi';
 
@@ -131,16 +131,16 @@ const Navbar = () => {
                     <div className="flex items-center space-x-3">
                         <Link to="/" className="flex items-center space-x-3 hover:scale-105 transition-transform duration-300 p-2 rounded-xl hover:bg-primary/10">
                             <div className="relative">
-                                <img 
-                                    src="/Logo.png" 
-                                    alt="PetConnect Logo" 
+                                <img
+                                    src="/Logo.png"
+                                    alt="PetConnect Logo"
                                     className="h-12 w-12 object-contain transition-transform duration-300"
                                     onError={(e) => {
                                         e.target.style.display = 'none';
                                         e.target.nextSibling.style.display = 'flex';
                                     }}
                                 />
-                                <div 
+                                <div
                                     className="h-12 w-12 bg-gradient-to-br from-primary via-secondary to-accent rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-xl"
                                     style={{ display: 'none' }}
                                 >
@@ -166,11 +166,10 @@ const Navbar = () => {
                                 <Link
                                     key={item.path}
                                     to={item.path}
-                                    className={`group flex items-center space-x-2 font-medium transition-all duration-300 px-4 py-2.5 rounded-xl relative overflow-hidden ${
-                                        isActive(item.path)
+                                    className={`group flex items-center space-x-2 font-medium transition-all duration-300 px-4 py-2.5 rounded-xl relative overflow-hidden ${isActive(item.path)
                                             ? 'text-white bg-gradient-to-r from-primary to-secondary shadow-lg scale-105'
                                             : 'text-base-content hover:text-primary hover:bg-primary/10 hover:scale-105'
-                                    }`}
+                                        }`}
                                 >
                                     <IconComponent className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
                                     <span className="relative z-10">{item.name}</span>
@@ -228,11 +227,10 @@ const Navbar = () => {
                                                         {user.email}
                                                     </p>
                                                     {userRole && (
-                                                        <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full mt-1 ${
-                                                            userRole === 'admin' 
+                                                        <span className={`inline-flex px-2 py-0.5 text-xs font-semibold rounded-full mt-1 ${userRole === 'admin'
                                                                 ? 'bg-green-100 text-green-800'
                                                                 : 'bg-blue-100 text-blue-800'
-                                                        }`}>
+                                                            }`}>
                                                             {userRole === 'admin' ? '👑 Admin' : '👤 User'}
                                                         </span>
                                                     )}
@@ -244,7 +242,7 @@ const Navbar = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <Link
                                             to={userRole === 'admin' ? '/admin/dashboard' : '/dashboard'}
                                             className="flex items-center space-x-3 px-4 py-3 hover:bg-primary/10 transition-colors duration-200 group"
@@ -256,7 +254,7 @@ const Navbar = () => {
                                             </span>
                                             <span className="ml-auto text-xs opacity-50">⌘D</span>
                                         </Link>
-                                        
+
                                         <Link
                                             to="/profile"
                                             className="flex items-center space-x-3 px-4 py-3 hover:bg-primary/10 transition-colors duration-200 group"
@@ -266,7 +264,7 @@ const Navbar = () => {
                                             <span className="font-primary font-medium">Profile</span>
                                             <span className="ml-auto text-xs opacity-50">⌘P</span>
                                         </Link>
-                                        
+
                                         <Link
                                             to="/settings"
                                             className="flex items-center space-x-3 px-4 py-3 hover:bg-primary/10 transition-colors duration-200 group"
@@ -276,7 +274,7 @@ const Navbar = () => {
                                             <span className="font-primary font-medium">Settings</span>
                                             <span className="ml-auto text-xs opacity-50">⌘S</span>
                                         </Link>
-                                        
+
                                         <div className="border-t border-base-300/50 mt-2 pt-2">
                                             <button
                                                 onClick={handleLogout}
@@ -332,11 +330,10 @@ const Navbar = () => {
                                         key={item.path}
                                         to={item.path}
                                         onClick={() => setIsMobileMenuOpen(false)}
-                                        className={`flex items-center space-x-3 font-primary font-medium transition-all duration-300 px-4 py-3 rounded-xl ${
-                                            isActive(item.path)
+                                        className={`flex items-center space-x-3 font-primary font-medium transition-all duration-300 px-4 py-3 rounded-xl ${isActive(item.path)
                                                 ? 'text-primary bg-primary/10 shadow-sm'
                                                 : 'hover:text-primary hover:bg-primary/5'
-                                        }`}
+                                            }`}
                                     >
                                         <IconComponent className="w-5 h-5" />
                                         <span>{item.name}</span>
@@ -346,7 +343,7 @@ const Navbar = () => {
                                     </Link>
                                 );
                             })}
-                            
+
                             {!user && (
                                 <div className="flex flex-col space-y-2 pt-4 border-t border-base-300/50 mt-4">
                                     <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>

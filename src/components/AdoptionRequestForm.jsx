@@ -23,7 +23,7 @@ const AdoptionRequestForm = ({ pet, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!formData.requesterName || !formData.requesterEmail || !formData.requesterPhone || !formData.requesterLocation) {
             Swal.fire({
                 title: 'Incomplete Information',
@@ -37,7 +37,7 @@ const AdoptionRequestForm = ({ pet, onClose }) => {
         try {
             setSubmitting(true);
             const token = await user.getIdToken();
-            
+
             const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://pet-connect-server-one.vercel.app'}/adoption-requests`, {
                 method: 'POST',
                 headers: {
@@ -94,7 +94,7 @@ const AdoptionRequestForm = ({ pet, onClose }) => {
                             <FaHeart className="text-primary text-xl" />
                             <h2 className="text-xl font-bold">Adoption Request</h2>
                         </div>
-                        <button 
+                        <button
                             onClick={onClose}
                             className="btn btn-ghost btn-sm btn-circle"
                         >
@@ -105,13 +105,13 @@ const AdoptionRequestForm = ({ pet, onClose }) => {
                         Submit your adoption request for <strong>{pet.petName || pet.name}</strong>
                     </p>
                 </div>
-                
+
                 <form onSubmit={handleSubmit} className="p-6 space-y-6">
                     {/* Pet Info */}
                     <div className="bg-primary/5 rounded-2xl p-4 border border-primary/10">
                         <div className="flex items-center gap-3">
-                            <img 
-                                src={pet.petImage || pet.image || '/placeholder.jpg'} 
+                            <img
+                                src={pet.petImage || pet.image || '/placeholder.jpg'}
                                 alt={pet.petName || pet.name}
                                 className="w-16 h-16 rounded-xl object-cover"
                             />
