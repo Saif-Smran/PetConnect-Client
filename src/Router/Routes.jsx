@@ -12,6 +12,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Dashboard from "../pages/Dashboard";
 import Profile from "../pages/Profile";
+import Settings from "../pages/Settings";
 import AddPet from "../pages/AddPet";
 import Petlist from "../pages/PetList/Petlist";
 import ProtectedRoute from "../components/ProtectedRoute";
@@ -122,6 +123,15 @@ const route = createBrowserRouter([
                 element: (
                     <ProtectedRoute>
                         <Profile></Profile>
+                    </ProtectedRoute>
+                )
+            }
+            ,
+            {
+                path: "/settings",
+                element: (
+                    <ProtectedRoute>
+                        <Settings />
                     </ProtectedRoute>
                 )
             }
