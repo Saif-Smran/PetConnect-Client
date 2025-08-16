@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { 
     FaPaw, 
@@ -149,7 +150,11 @@ const Overview = () => {
                     <h2 className="text-2xl font-bold text-base-content">Quick Actions</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div className="group p-6 bg-base-100/50 rounded-2xl border border-base-content/10 hover:shadow-xl transition-all duration-300 cursor-pointer">
+                    <Link
+                        to="/dashboard/add-pet"
+                        className="group p-6 bg-base-100/50 rounded-2xl border border-base-content/10 hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        aria-label="Add a new pet"
+                    >
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <FaPaw className="w-6 h-6 text-primary" />
@@ -159,9 +164,12 @@ const Overview = () => {
                                 <p className="text-sm text-base-content/70">List a pet for adoption</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div className="group p-6 bg-base-100/50 rounded-2xl border border-base-content/10 hover:shadow-xl transition-all duration-300 cursor-pointer">
+                    </Link>
+                    <Link
+                        to="/dashboard/create-donation-campaign"
+                        className="group p-6 bg-base-100/50 rounded-2xl border border-base-content/10 hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-secondary/50"
+                        aria-label="Create a donation campaign"
+                    >
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-full bg-secondary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <FaBullhorn className="w-6 h-6 text-secondary" />
@@ -171,9 +179,12 @@ const Overview = () => {
                                 <p className="text-sm text-base-content/70">Start a donation campaign</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div className="group p-6 bg-base-100/50 rounded-2xl border border-base-content/10 hover:shadow-xl transition-all duration-300 cursor-pointer">
+                    </Link>
+                    <Link
+                        to="/pets"
+                        className="group p-6 bg-base-100/50 rounded-2xl border border-base-content/10 hover:shadow-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-accent/50"
+                        aria-label="Browse pets available for adoption"
+                    >
                         <div className="flex items-center gap-4">
                             <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <FaHandHoldingHeart className="w-6 h-6 text-accent" />
@@ -183,7 +194,7 @@ const Overview = () => {
                                 <p className="text-sm text-base-content/70">Find pets to adopt</p>
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 </div>
             </div>
 
