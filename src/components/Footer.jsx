@@ -94,7 +94,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <span className="text-sm text-base-content/50">Email</span>
-                  <p className="font-medium">support@petconnect.com</p>
+                  <p className="font-medium">smrangb@gmail.com</p>
                 </div>
               </li>
               <li className="flex items-center space-x-3 text-base-content/70 group">
@@ -103,7 +103,7 @@ const Footer = () => {
                 </div>
                 <div>
                   <span className="text-sm text-base-content/50">Phone</span>
-                  <p className="font-medium">+1 234 567 8900</p>
+                  <p className="font-medium">+88 01521 468295</p>
                 </div>
               </li>
               <li className="flex items-center space-x-3 text-base-content/70 group">
