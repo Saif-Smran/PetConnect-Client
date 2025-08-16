@@ -1,6 +1,32 @@
-# 🐾 PetConnect - Pet Adoption & Care Platform
+# 🐾 PetConnect – Pet Adoption & Care Platform
 
-A comprehensive full-stack web application for pet adoption, donation campaigns, and pet care management. Built with React, Firebase, and modern web technologies.
+Comprehensive web application for discovering, adopting, and supporting pets through structured donation campaigns. Built with modern React (v19), React Router v7, Tailwind CSS v4, Firebase Auth, and Stripe.
+
+<p align="center">
+  <a href="#-tech-stack"><img alt="Tech" src="https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white" /></a>
+  <a href="#-tech-stack"><img alt="Router" src="https://img.shields.io/badge/React_Router-7-red?logo=reactrouter" /></a>
+  <a href="#-tech-stack"><img alt="Tailwind" src="https://img.shields.io/badge/Tailwind-4-38bdf8?logo=tailwindcss&logoColor=white" /></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-green" /></a>
+</p>
+
+---
+
+## 📑 Table of Contents
+1. [Features](#-features)
+2. [Tech Stack](#-tech-stack)
+3. [Getting Started](#-getting-started)
+4. [Environment Variables](#-environment-variables)
+5. [Project Structure](#-project-structure)
+6. [Key Feature Details](#-key-features-details)
+7. [UI / UX](#-uiux-features)
+8. [API & Data Flow](#-api-integration)
+9. [Security](#-security-features)
+10. [Performance](#-performance-optimizations)
+11. [Scripts](#-development-scripts)
+12. [Status & Roadmap](#-project-status)
+13. [Contributing](#-contributing)
+14. [License](#-license)
+15. [Contact](#-contact)
 
 ## 🌟 Features
 
@@ -36,43 +62,38 @@ A comprehensive full-stack web application for pet adoption, donation campaigns,
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- **React 18+** - Modern React with hooks and context
-- **React Router 6+** - Client-side routing
-- **Tailwind CSS** - Utility-first CSS framework
-- **DaisyUI** - Component library for Tailwind
-- **TanStack Query** - Data fetching and state management
-- **TipTap** - Rich text editor
-- **Vite** - Build tool and dev server
+| Layer | Library / Service | Version (package.json) | Purpose |
+|-------|-------------------|------------------------|---------|
+| UI Core | React | 19.1.x | Component library (hooks, concurrent-ready) |
+| Routing | react-router-dom | 7.6.x | Declarative routing & data APIs |
+| Styling | Tailwind CSS | 4.1.x | Utility-first styling |
+| Component Theme | daisyUI | 5.0.x | Prebuilt themed components |
+| Data Fetching | @tanstack/react-query | 5.81.x | Server-state caching & syncing |
+| Tables | @tanstack/react-table | 8.21.x | Headless table utilities |
+| Rich Text | TipTap (starter-kit + extensions) | 2.25.x | WYSIWYG editor for descriptions |
+| Forms | formik / yup | 2.4.x / 1.6.x | Form state + schema validation |
+| Auth | Firebase | 11.10.x | Authentication (Email/OAuth) |
+| HTTP | axios | 1.10.x | REST calls + interceptors |
+| Payments | Stripe (react + js) | 3.7.x / 7.4.x | Secure donation & fee payments |
+| Media | ImgBB API | — | Pet image hosting |
+| Animations | lottie-react | 2.4.x | Lottie JSON animations |
+| Icons | react-icons | 5.5.x | Iconography |
+| Alerts | sweetalert2 | 11.22.x | User feedback modals |
+| Dates | date-fns | 4.1.x | Date formatting & math |
+| Build Tool | Vite | 7.x | Fast dev server & bundler |
+| Linting | ESLint (@eslint/js) | 9.29.x | Code quality enforcement |
 
-### Authentication & Backend
-- **Firebase** - Authentication and backend services
-- **Axios** - HTTP client for API calls
-- **Stripe** - Payment processing
-
-### Form Management & Validation
-- **Formik** - Form handling
-- **Yup** - Schema validation
-- **React Select** - Enhanced select components
-
-### UI Enhancement
-- **React Icons** - Icon library
-- **Lottie React** - Animation library
-- **SweetAlert2** - Beautiful alerts and modals
-- **Date-fns** - Date manipulation
-
-### Development Tools
-- **ESLint** - Code linting
-- **Vite** - Development server and build tool
+> Note: Versions are kept intentionally flexible (caret ranges). Lock with a lockfile for deterministic builds.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn package manager
-- Firebase project setup
-- ImgBB API key (for image uploads)
-- Stripe account (for payments)
+- Node.js LTS v20+ (tested) – v18 should work but not regularly validated
+- npm (bundled) or pnpm/yarn (adjust commands accordingly)
+- Firebase project (Authentication enabled: Email/Password + desired OAuth providers)
+- ImgBB API key (for image uploads) or replace with another image host
+- Stripe account + Publishable key (test mode for development)
+- Backend REST API (if using a custom server) reachable via `VITE_API_URL`
 
 ### Installation
 
@@ -87,10 +108,9 @@ cd PetConnect-Client
 npm install
 ```
 
-3. **Environment Setup**
-Create a `.env` file in the root directory:
-```env
-# Firebase Configuration
+3. **Environment Setup** – create a `.env` (or `.env.local`) in project root:
+```bash
+# Firebase
 VITE_apiKey=your_firebase_api_key
 VITE_authDomain=your_project.firebaseapp.com
 VITE_projectId=your_project_id
@@ -98,23 +118,52 @@ VITE_storageBucket=your_project.appspot.com
 VITE_messagingSenderId=your_sender_id
 VITE_appId=your_app_id
 
-# API Configuration
+# REST API Base (if applicable)
 VITE_API_URL=https://your-api-url.com
 
-# Third-party Services
+# Third‑Party Keys
 VITE_IMGBB_API_KEY=your_imgbb_api_key
 VITE_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
 ```
+
+4. **(Optional) Verify versions**
+```pwsh
+node -v
+npm -v
+```
+
+5. **Start the development server**
 
 4. **Start the development server**
 ```bash
 npm run dev
 ```
 
-5. **Build for production**
+6. **Build for production**
 ```bash
 npm run build
 ```
+
+7. **Preview production build locally**
+```bash
+npm run preview
+```
+
+## 🔐 Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| VITE_apiKey | ✅ | Firebase API key |
+| VITE_authDomain | ✅ | Firebase auth domain |
+| VITE_projectId | ✅ | Firebase project id |
+| VITE_storageBucket | ✅ | Firebase storage bucket |
+| VITE_messagingSenderId | ✅ | Firebase messaging sender id |
+| VITE_appId | ✅ | Firebase app id |
+| VITE_API_URL | ➖ | Backend REST base URL (if using custom server) |
+| VITE_IMGBB_API_KEY | ✅ (current impl) | ImgBB upload key |
+| VITE_STRIPE_PUBLISHABLE_KEY | ✅ (donations) | Stripe publishable key |
+
+Security tip: Never commit real keys. Use `.env.local` (git‑ignored). For deployments, configure environment variables via your hosting provider.
 
 ## 📁 Project Structure
 
@@ -195,21 +244,21 @@ src/
 - **Pet Profiles**: Comprehensive pet information with photo galleries
 
 ### Adoption System
-- **Adoption Requests**: Users can submit adoption requests
-- **Request Management**: Pet owners can approve/reject requests
-- **Communication**: Built-in messaging system for adopters and owners
+- **Adoption Requests**: Users submit requests with contextual info
+- **Request Management**: Pet owners approve / reject with status updates
+- **(Planned)** Direct messaging / chat (see roadmap)
 
 ### Donation Campaigns
-- **Campaign Creation**: Rich text editor for detailed campaign descriptions
-- **Goal Tracking**: Visual progress bars and donation tracking
-- **Payment Processing**: Secure Stripe integration
-- **Campaign Management**: Edit, pause, or close campaigns
+- **Campaign Creation**: Rich text (TipTap) with media
+- **Goal Tracking**: Progress indicators & real-time totals
+- **Payment Processing**: Secure Stripe client elements
+- **Campaign Management**: Edit / pause / close
 
 ### Admin Features
-- **User Management**: View and manage all users
-- **Pet Oversight**: Monitor all pets and adoption requests
-- **Donation Oversight**: Track all campaigns and donations
-- **Analytics**: Comprehensive dashboard with statistics
+- **User Management**: Role oversight & access
+- **Pet Oversight**: Global visibility of listings & statuses
+- **Donation Oversight**: Monitor campaigns and transactions
+- **Analytics (Foundational)**: High-level metrics (expandable)
 
 ## 🎨 UI/UX Features
 
@@ -259,12 +308,12 @@ src/
 - **Role-based Access**: Admin and user role separation
 
 ### Error Handling & Security
-- **Custom Error Pages**: User-friendly error handling
-- **Error Boundaries**: React error boundary for graceful failures
-- **Route Protection**: Unauthorized access prevention
-- **Input Validation**: Client and server-side validation
-- **CORS Configuration**: Proper cross-origin setup
-- **Secure Headers**: Security best practices
+- **Custom Error Pages**: Friendly fallbacks
+- **Error Boundaries**: React runtime isolation
+- **Route Protection**: Role gating & auth guard
+- **Input Validation**: Client + server (schema-driven)
+- **CORS Configuration**: Controlled origin access
+- **Secure Headers**: (Configure at hosting layer)
 
 ### Error Routes
 - **404 Not Found** (`/error/404`, `/*`): Missing pages and resources
@@ -341,12 +390,13 @@ npm run lint
 - Improved performance optimizations
 
 ### 🚀 Future Enhancements
-- **Push Notifications**: Real-time notifications for adoption requests
-- **Chat System**: Real-time messaging between users
-- **AI Recommendations**: ML-based pet matching
-- **Mobile App**: React Native mobile application
-- **Advanced Analytics**: Detailed insights and reporting
-- **PWA Features**: Service workers and offline support
+- **Push Notifications** (Firebase Cloud Messaging)
+- **Chat System** (WebSocket / Firestore realtime)
+- **AI Recommendations** (content-based pet matching)
+- **Mobile App** (React Native / Expo)
+- **Advanced Analytics** (segmented dashboards)
+- **PWA Features** (offline cache, install prompts)
+- **Accessibility Audit** (WCAG AA compliance pass)
 
 ## 🤝 Contributing
 
@@ -358,13 +408,13 @@ npm run lint
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License. See [LICENSE](./LICENSE) for full text.
 
 ## 📞 Contact
 
 **Developer**: Saif Smran  
-**GitHub**: [Programming-Hero-Web-Course4](https://github.com/Programming-Hero-Web-Course4)  
-**Repository**: [b11a12-client-side-Saif-Smran](https://github.com/Programming-Hero-Web-Course4/b11a12-client-side-Saif-Smran)
+**GitHub**: [Saif-Smran](https://github.com/Saif-Smran)  
+**Repository**: [PetConnect-Client](https://github.com/Saif-Smran/PetConnect-Client)
 
 ---
 
