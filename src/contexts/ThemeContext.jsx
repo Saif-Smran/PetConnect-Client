@@ -21,7 +21,7 @@ export const ThemeProvider = ({ children }) => {
 
   // Apply theme to document
   useEffect(() => {
-    console.log('Applying theme to document:', theme);
+    // console.log('Applying theme to document:', theme);
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('petconnect-theme', theme);
   }, [theme]);

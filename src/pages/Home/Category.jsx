@@ -25,11 +25,11 @@ const Category = () => {
         ? `/pets?category=${categoryValue}`
         : `/pets`;
 
-      console.log('🔍 Fetching pets from:', endpoint);
+      // console.log('🔍 Fetching pets from:', endpoint);
       const response = await api.get(endpoint);
       let petsData = response.data;
       
-      console.log('📊 Received pets data:', petsData.length, 'pets');
+      // console.log('📊 Received pets data:', petsData.length, 'pets');
       
       // Shuffle and limit pets based on category
       if (categoryValue === 'all') {

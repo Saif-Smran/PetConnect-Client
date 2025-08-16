@@ -132,10 +132,10 @@ const Footer = () => {
               &copy; 2025 PetConnect. All rights reserved.
             </div>
             <div className="flex items-center space-x-4 text-sm text-base-content/50">
-              <Link to="/privacy" className="hover:text-primary transition-colors duration-300">
+              <Link to="#" className="hover:text-primary transition-colors duration-300">
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="hover:text-primary transition-colors duration-300">
+              <Link to="#" className="hover:text-primary transition-colors duration-300">
                 Terms of Service
               </Link>
             </div>

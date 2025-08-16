@@ -24,7 +24,7 @@ export const isValidFirebaseToken = (token) => {
         
         // Decode header to check algorithm and kid
         const header = JSON.parse(atob(parts[0].replace(/-/g, '+').replace(/_/g, '/')));
-        console.log('🔍 Token header:', header);
+        // console.log('🔍 Token header:', header);
         
         // Firebase ID tokens should use RS256 and have a "kid" claim
         return header.alg === 'RS256' && header.kid;
@@ -41,7 +41,7 @@ export const getFreshFirebaseToken = async (user) => {
     }
     
     try {
-        console.log('🔄 Getting fresh Firebase ID token...');
+        // console.log('🔄 Getting fresh Firebase ID token...');
         const token = await user.getIdToken(true); // Force refresh
         
         // Validate the token
@@ -50,16 +50,16 @@ export const getFreshFirebaseToken = async (user) => {
             throw new Error('Invalid Firebase ID token received');
         }
         
-        const decoded = decodeJWT(token);
+        // const decoded = decodeJWT(token);
         
-        console.log('🔐 Fresh Firebase Token Info:', {
-            uid: decoded?.sub,
-            email: decoded?.email,
-            name: decoded?.name,
-            exp: decoded?.exp,
-            expiresAt: new Date(decoded?.exp * 1000).toISOString(),
-            issuer: decoded?.iss
-        });
+        // console.log('🔐 Fresh Firebase Token Info:', {
+        //     uid: decoded?.sub,
+        //     email: decoded?.email,
+        //     name: decoded?.name,
+        //     exp: decoded?.exp,
+        //     expiresAt: new Date(decoded?.exp * 1000).toISOString(),
+        //     issuer: decoded?.iss
+        // });
         
         // Store the fresh token
         localStorage.setItem('firebase_id_token', token);
