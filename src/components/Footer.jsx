@@ -32,16 +32,16 @@ const Footer = () => {
               Connecting hearts with paws. We believe every pet deserves a loving home and every family deserves the joy of a furry companion. Join our mission to create perfect matches between pets and their forever families.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="p-2 bg-primary/10 hover:bg-primary/20 rounded-full transition-colors duration-300 group">
+              <a href="https://www.facebook.com/saif.smran.1" className="p-2 bg-primary/10 hover:bg-primary/20 rounded-full transition-colors duration-300 group">
                 <FaFacebook className="w-5 h-5 text-primary group-hover:scale-110 transition-transform duration-300" />
               </a>
-              <a href="#" className="p-2 bg-secondary/10 hover:bg-secondary/20 rounded-full transition-colors duration-300 group">
+              <a href="https://x.com/Soron_Hosain" className="p-2 bg-secondary/10 hover:bg-secondary/20 rounded-full transition-colors duration-300 group">
                 <FaTwitter className="w-5 h-5 text-secondary group-hover:scale-110 transition-transform duration-300" />
               </a>
-              <a href="#" className="p-2 bg-accent/10 hover:bg-accent/20 rounded-full transition-colors duration-300 group">
+              <a href="https://www.instagram.com/hosain_soron/" className="p-2 bg-accent/10 hover:bg-accent/20 rounded-full transition-colors duration-300 group">
                 <FaInstagram className="w-5 h-5 text-accent group-hover:scale-110 transition-transform duration-300" />
               </a>
-              <a href="#" className="p-2 bg-info/10 hover:bg-info/20 rounded-full transition-colors duration-300 group">
+              <a href="https://www.linkedin.com/in/a-h-m-saif-smran" className="p-2 bg-info/10 hover:bg-info/20 rounded-full transition-colors duration-300 group">
                 <FaLinkedin className="w-5 h-5 text-info group-hover:scale-110 transition-transform duration-300" />
               </a>
             </div>
